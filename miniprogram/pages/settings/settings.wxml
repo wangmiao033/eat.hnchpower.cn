@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="header">
+    <text class="title">设置</text>
+    <text class="subtitle">当前版本先用本地推荐。AI 生成需要接服务端代理后再开启。</text>
+  </view>
+
+  <view class="panel settings-card">
+    <text class="card-title">小程序信息</text>
+    <view class="row">
+      <text class="row-label">名称</text>
+      <text class="row-value">今天吃啥</text>
+    </view>
+    <view class="row">
+      <text class="row-label">AppID</text>
+      <text class="row-value">wxd1c8bf1985a26067</text>
+    </view>
+  </view>
+
+  <view class="panel settings-card">
+    <text class="card-title">安全说明</text>
+    <text class="paragraph">AppSecret、AI API Key 只能放在服务端环境变量里。小程序客户端后续只请求你的 HTTPS 代理接口。</text>
+    <text class="paragraph">如果这个密钥已经在公开仓库、截图、群聊或不可信环境里出现，建议到微信公众平台重新生成。</text>
+  </view>
+
+  <view class="panel settings-card">
+    <text class="card-title">下一步接口</text>
+    <text class="paragraph">建议新增一个服务端接口：POST /api/recipes/generate。小程序提交食材和偏好，服务端持有密钥并调用 AI 服务。</text>
+  </view>
+</view>

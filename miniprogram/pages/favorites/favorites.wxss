@@ -1,0 +1,69 @@
+.header {
+  padding: 28rpx 4rpx 8rpx;
+}
+
+.title {
+  display: block;
+  color: #1c1917;
+  font-size: 48rpx;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 14rpx;
+  color: #78716c;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+.empty {
+  margin-top: 34rpx;
+  padding: 36rpx;
+  color: #78716c;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.list {
+  margin-top: 26rpx;
+}
+
+.favorite-card {
+  margin-bottom: 22rpx;
+  padding: 26rpx;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.dish-name {
+  display: block;
+  color: #1c1917;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.meta {
+  display: block;
+  margin-top: 8rpx;
+  color: #78716c;
+  font-size: 24rpx;
+}
+
+.remove {
+  width: 120rpx;
+  flex: 0 0 120rpx;
+}
+
+.ingredients {
+  display: block;
+  margin-top: 22rpx;
+  color: #57534e;
+  font-size: 28rpx;
+  line-height: 1.5;
+}

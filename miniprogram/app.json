@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/favorites/favorites",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "navigationBarTitleText": "今天吃啥",
+    "navigationBarBackgroundColor": "#f97316",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#fff7ed",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#78716c",
+    "selectedColor": "#f97316",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "推荐"
+      },
+      {
+        "pagePath": "pages/favorites/favorites",
+        "text": "收藏"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,62 @@
+<view class="page home">
+  <view class="hero">
+    <text class="eyebrow">今天吃啥</text>
+    <text class="title">摇一下，定一顿饭</text>
+    <text class="subtitle">输入手边食材，选几个口味偏好，先给你一个靠谱建议。</text>
+  </view>
+
+  <view class="section panel form-panel">
+    <text class="label">家里有什么</text>
+    <textarea class="ingredient-input" value="{{ingredientInput}}" placeholder="例如：鸡蛋、番茄、青椒、豆腐" auto-height bindinput="onIngredientInput" />
+
+    <text class="label preference-label">口味偏好</text>
+    <view class="chips">
+      <button
+        wx:for="{{preferenceOptions}}"
+        wx:key="name"
+        class="chip {{item.active ? 'active' : ''}}"
+        data-tag="{{item.name}}"
+        bindtap="toggleTag"
+      >
+        {{item.name}}
+      </button>
+    </view>
+  </view>
+
+  <button class="primary-button shake-button" bindtap="pickTodayDish">今天吃啥</button>
+
+  <view wx:if="{{currentDish}}" class="section panel result-card">
+    <view class="result-head">
+      <view>
+        <text class="result-label">推荐你吃</text>
+        <text class="dish-name">{{currentDish.name}}</text>
+      </view>
+      <button class="save-button" bindtap="saveCurrentDish">收藏</button>
+    </view>
+
+    <view class="meta-row">
+      <text>{{currentDish.time}}</text>
+      <text>{{currentDish.difficulty}}</text>
+      <text wx:for="{{currentDish.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+
+    <view class="block">
+      <text class="block-title">需要准备</text>
+      <text class="block-text">{{currentDish.ingredientsText}}</text>
+    </view>
+
+    <view class="block">
+      <text class="block-title">做法</text>
+      <view class="steps">
+        <view wx:for="{{currentDish.steps}}" wx:key="index" class="step">
+          <text class="step-index">{{index + 1}}</text>
+          <text class="step-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section note">
+    <text>提示：后续接 AI 时，小程序只调用你的服务端代理，不能把 API Key 或 AppSecret 放进客户端。</text>
+  </view>
+</view>

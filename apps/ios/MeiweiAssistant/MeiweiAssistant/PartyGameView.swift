@@ -7,13 +7,17 @@ struct PartyGameView: View {
     @State private var rollToken = 0
     @State private var isRolling = false
     @State private var selectedRecipe: Recipe?
-    @State private var participants = ["我", "小王"]
+    @State private var participants = PartyGameView.initialParticipants()
     @State private var assignments: [(role: String, person: String, symbol: String)] = []
     @State private var isShuffling = false
 
     private var candidates: [Recipe] {
-        guard let first = SampleData.recipes.first else { return [] }
-        return SampleData.recipes + [first]
+        (1...6).map { SharedDataStore.shared.recipeForDiceFace($0) }
+    }
+
+    private static func initialParticipants() -> [String] {
+        let shared = Array(SharedDataStore.shared.defaultPartyParticipantNames.prefix(2))
+        return shared.count >= 2 ? shared : ["我", "搭子"]
     }
 
     var body: some View {
@@ -160,8 +164,9 @@ struct PartyGameView: View {
                 }
                 if participants.count < 4 {
                     Button {
-                        let pool = ["小李", "小陈"]
-                        participants.append(pool[min(participants.count - 2, pool.count - 1)])
+                        let pool = SharedDataStore.shared.defaultPartyParticipantNames
+                        let fallback = ["朋友", "家人", "搭子", "同事"]
+                        participants.append(pool[safe: participants.count] ?? fallback[safe: participants.count - 2] ?? "新成员")
                         assignments = []
                     } label: {
                         Image(systemName: "plus")
@@ -270,16 +275,35 @@ struct PartyGameView: View {
                 (role: role.role, person: shuffled[index], symbol: role.symbol)
             }
             isShuffling = false
+            growth.recordPartyAssignment()
         }
     }
 
     private var roleDefinitions: [(role: String, symbol: String, color: Color)] {
-        [
-            ("主厨", "🔥", Color(red: 0.95, green: 0.89, blue: 0.85)),
-            ("洗碗", "💧", Color(red: 0.89, green: 0.93, blue: 0.86)),
-            ("帮厨", "🔪", Color(red: 0.91, green: 0.89, blue: 0.94)),
-            ("采购", "🧺", Color(red: 0.94, green: 0.91, blue: 0.84))
+        let colors = [
+            Color(red: 0.95, green: 0.89, blue: 0.85),
+            Color(red: 0.89, green: 0.93, blue: 0.86),
+            Color(red: 0.91, green: 0.89, blue: 0.94),
+            Color(red: 0.94, green: 0.91, blue: 0.84)
         ]
+        let roles = SharedDataStore.shared.partyRoles
+        guard !roles.isEmpty else {
+            return [
+                ("主厨", "🍳", colors[0]),
+                ("洗碗", "💧", colors[1]),
+                ("帮厨", "🔪", colors[2]),
+                ("采购", "🧺", colors[3])
+            ]
+        }
+        return roles.enumerated().map { index, role in
+            (role.label, role.icon, colors[safe: index] ?? AppTheme.sand)
+        }
+    }
+}
+
+private extension Array {
+    subscript(safe index: Int) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }
 

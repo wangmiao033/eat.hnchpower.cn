@@ -18,6 +18,10 @@ targets:
       - path: MeiweiAssistant/Assets.xcassets
       - path: MeiweiAssistant/Assets.scnassets
       - path: MeiweiAssistant/title-catalog.json
+      - path: ../../../shared/data/recipes.json
+      - path: ../../../shared/data/titles.json
+      - path: ../../../shared/data/mystic.json
+      - path: ../../../shared/data/party-games.json
     info:
       path: MeiweiAssistant/Info.plist
       properties:

@@ -95,7 +95,8 @@ struct AchievementSnapshot {
 
 enum AchievementRuleEngine {
     static func loadCatalog(bundle: Bundle = .main) throws -> TitleCatalogResource {
-        guard let url = bundle.url(forResource: "title-catalog", withExtension: "json") else {
+        guard let url = bundle.url(forResource: "titles", withExtension: "json")
+            ?? bundle.url(forResource: "title-catalog", withExtension: "json") else {
             throw CocoaError(.fileNoSuchFile)
         }
         return try JSONDecoder().decode(TitleCatalogResource.self, from: Data(contentsOf: url))

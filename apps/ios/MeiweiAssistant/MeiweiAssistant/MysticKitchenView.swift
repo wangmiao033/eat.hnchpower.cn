@@ -44,6 +44,10 @@ struct MysticKitchenView: View {
     private let plum = Color(red: 0.11, green: 0.07, blue: 0.13)
     private let violet = Color(red: 0.48, green: 0.32, blue: 0.76)
     private let gold = Color(red: 0.91, green: 0.75, blue: 0.46)
+    private var moodOptions: [(id: String, emoji: String)] {
+        let shared = SharedDataStore.shared.mysticMoods.map { ($0.id, $0.emoji) }
+        return shared.isEmpty ? [("开心","😊"),("疲惫","😴"),("焦虑","😵‍💫"),("想家","🥺"),("兴奋","🤩"),("平静","😌")] : shared
+    }
 
     var body: some View {
         ScrollView {
@@ -194,10 +198,10 @@ struct MysticKitchenView: View {
             }
         case .mood:
             LazyVGrid(columns: Array(repeating: GridItem(.fixed(58)), count: 3), spacing: 13) {
-                ForEach([("开心","😊"),("疲惫","😴"),("焦虑","😵‍💫"),("想家","🥺"),("兴奋","🤩"),("平静","😌")], id: \.0) { item in
-                    Button { mood = item.0 } label: {
-                        Text(item.1).font(.title2).frame(width: 54, height: 54).background(.white, in: Circle())
-                            .overlay(Circle().stroke(mood == item.0 ? violet : Color.black.opacity(0.05), lineWidth: mood == item.0 ? 2 : 1))
+                ForEach(moodOptions, id: \.id) { item in
+                    Button { mood = item.id } label: {
+                        Text(item.emoji).font(.title2).frame(width: 54, height: 54).background(.white, in: Circle())
+                            .overlay(Circle().stroke(mood == item.id ? violet : Color.black.opacity(0.05), lineWidth: mood == item.id ? 2 : 1))
                     }.buttonStyle(.plain)
                 }
             }
@@ -246,17 +250,16 @@ struct MysticKitchenView: View {
         casting = true
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-            let recipe: Recipe
-            switch mode {
-            case .daily, .mood: recipe = SampleData.recipes.first(where: {$0.id == "tomato-egg"}) ?? SampleData.recipes[0]
-            case .tarot: recipe = SampleData.recipes.first(where: {$0.id == "mapo-tofu"}) ?? SampleData.recipes[0]
-            case .number: recipe = SampleData.recipes[number % SampleData.recipes.count]
-            case .couple: recipe = SampleData.recipes.first(where: {$0.id == "mushroom-chicken"}) ?? SampleData.recipes[0]
-            case .sticks: recipe = SampleData.recipes.randomElement()!
-            }
+            let outcome = SharedDataStore.shared.castMystic(mode: mode.rawValue, mood: mood, number: number)
             casting = false
             growth.recordMysticCast()
-            result = MysticResult(recipe: recipe, score: recipe.id == "tomato-egg" ? 95 : 92, flavor: recipe.tags.first ?? "家常", ingredient: recipe.ingredients.first?.name ?? "时令食材", message: "今晚宜少纠结，多开火。让一道真正能完成的菜，替今天收个好尾。")
+            result = MysticResult(
+                recipe: outcome.recipe,
+                score: outcome.score,
+                flavor: outcome.flavor,
+                ingredient: outcome.ingredient,
+                message: outcome.message
+            )
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     }

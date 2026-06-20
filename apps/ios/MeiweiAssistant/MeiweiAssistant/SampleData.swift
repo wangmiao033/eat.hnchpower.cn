@@ -1,8 +1,12 @@
 import Foundation
 
 enum SampleData {
-    // 后续替换内容时，优先修改这个文件；也可以把相同字段改为后端 JSON。
-    static let recipes: [Recipe] = [
+    static var recipes: [Recipe] {
+        SharedDataStore.shared.recipes.isEmpty ? fallbackRecipes : SharedDataStore.shared.recipes
+    }
+
+    // Bundle JSON 不可用时的离线回退样例，正式维护入口在 shared/data/recipes.json。
+    static let fallbackRecipes: [Recipe] = [
         Recipe(
             id: "tomato-egg",
             name: "番茄炒蛋",

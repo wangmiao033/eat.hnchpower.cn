@@ -72,7 +72,15 @@ struct TitleUnlockPresentation: Identifiable, Equatable {
 // MARK: - Catalog
 
 enum TitleCatalog {
-    static let main: [MainTitleDefinition] = [
+    static var main: [MainTitleDefinition] {
+        SharedDataStore.shared.mainTitles ?? fallbackMain
+    }
+
+    static var hidden: [HiddenTitleDefinition] {
+        SharedDataStore.shared.hiddenTitles ?? fallbackHidden
+    }
+
+    private static let fallbackMain: [MainTitleDefinition] = [
         .init(id: "main_001", requiredRecipeCount: 1, quality: .common, title: "小厨师"),
         .init(id: "main_002", requiredRecipeCount: 2, quality: .common, title: "厨房新手"),
         .init(id: "main_003", requiredRecipeCount: 3, quality: .common, title: "锅铲学徒"),
@@ -101,7 +109,7 @@ enum TitleCatalog {
     ]
 
     // Full catalog: 74 original hidden titles plus “天机开锅”.
-    static let hidden: [HiddenTitleDefinition] = [
+    private static let fallbackHidden: [HiddenTitleDefinition] = [
 .init(
     id: "hidden_streak_003",
     category: "坚持类",
@@ -707,20 +715,42 @@ enum TitleCatalog {
 
 // MARK: - Runtime state
 
+private struct GrowthStoreState: Codable {
+    var recipeCompletionCount: Int = 0
+    var cookingStreakDays: Int = 0
+    var diceRollCount: Int = 0
+    var mysticCastCount: Int = 0
+    var partyAssignmentCount: Int = 0
+    var unlockedHiddenTitleIDs: [String] = []
+    var displayHiddenTitleID: String?
+    var lastCompletionDayKey: String?
+}
+
 @MainActor
 final class GrowthStore: ObservableObject {
-    @Published private(set) var recipeCompletionCount = 7
-    @Published private(set) var cookingStreakDays = 3
+    @Published private(set) var recipeCompletionCount = 0
+    @Published private(set) var cookingStreakDays = 0
     @Published private(set) var diceRollCount = 0
+    @Published private(set) var partyAssignmentCount = 0
     @Published private(set) var mysticCastCount = 0
-    @Published private(set) var unlockedHiddenTitleIDs: Set<String> = ["hidden_streak_003"]
-    @Published var displayHiddenTitleID: String? = "hidden_streak_003"
+    @Published private(set) var unlockedHiddenTitleIDs: Set<String> = []
+    @Published var displayHiddenTitleID: String?
     @Published private(set) var activeUnlock: TitleUnlockPresentation?
 
     private var unlockQueue: [TitleUnlockPresentation] = []
+    private var lastCompletionDayKey: String?
+    private let storage: UserDefaults
+    private let storageKey = "meiwei.growthStore.v1"
+
+    init(storage: UserDefaults = .standard) {
+        self.storage = storage
+        loadState()
+        unlockSatisfiedHiddenTitles(showPresentation: false)
+    }
 
     var currentMainTitle: MainTitleDefinition {
-        TitleCatalog.main.last(where: { recipeCompletionCount >= $0.requiredRecipeCount }) ?? TitleCatalog.main[0]
+        let titles = TitleCatalog.main
+        return titles.last(where: { recipeCompletionCount >= $0.requiredRecipeCount }) ?? titles[0]
     }
 
     var nextMainTitle: MainTitleDefinition? {
@@ -729,7 +759,7 @@ final class GrowthStore: ObservableObject {
 
     var mainProgress: Double {
         guard let nextMainTitle else { return 1 }
-        let lower = currentMainTitle.requiredRecipeCount
+        let lower = TitleCatalog.main.last(where: { recipeCompletionCount >= $0.requiredRecipeCount })?.requiredRecipeCount ?? 0
         let upper = nextMainTitle.requiredRecipeCount
         guard upper > lower else { return 1 }
         return min(1, max(0, Double(recipeCompletionCount - lower) / Double(upper - lower)))
@@ -750,6 +780,7 @@ final class GrowthStore: ObservableObject {
     func recordRecipeCompletion() {
         let previousTitle = currentMainTitle
         recipeCompletionCount += 1
+        recordCookingDay()
         let newTitle = currentMainTitle
 
         if previousTitle.id != newTitle.id {
@@ -776,25 +807,47 @@ final class GrowthStore: ObservableObject {
                 )
             )
         }
+
+        unlockSatisfiedHiddenTitles()
+        saveState()
     }
 
     func recordDiceRoll() {
         diceRollCount += 1
-        if diceRollCount == 1 { unlockHiddenTitle(id: "hidden_random_001") }
-        if diceRollCount == 10 { unlockHiddenTitle(id: "hidden_random_010") }
+        unlockSatisfiedHiddenTitles()
+        saveState()
     }
 
     func recordMysticCast() {
         mysticCastCount += 1
-        guard mysticCastCount == 1 else { return }
-        unlockHiddenTitle(id: "hidden_mystic_first_001")
+        unlockSatisfiedHiddenTitles()
+        saveState()
+    }
+
+    func recordPartyAssignment() {
+        partyAssignmentCount += 1
+        unlockSatisfiedHiddenTitles()
+        saveState()
     }
 
     func unlockHiddenTitle(id: String) {
+        unlockHiddenTitle(id: id, showPresentation: true)
+    }
+
+    private func unlockHiddenTitle(id: String, showPresentation: Bool) {
         guard !unlockedHiddenTitleIDs.contains(id),
               let definition = TitleCatalog.hidden.first(where: { $0.id == id }) else { return }
 
         unlockedHiddenTitleIDs.insert(id)
+        if displayHiddenTitleID == nil {
+            displayHiddenTitleID = id
+        }
+
+        guard showPresentation else {
+            saveState()
+            return
+        }
+
         enqueue(
             .init(
                 kind: .hidden,
@@ -804,11 +857,13 @@ final class GrowthStore: ObservableObject {
                 nextMessage: "已加入称号殿堂，可随时设为展示称号。"
             )
         )
+        saveState()
     }
 
     func equipHiddenTitle(id: String) {
         guard unlockedHiddenTitleIDs.contains(id) else { return }
         displayHiddenTitleID = id
+        saveState()
     }
 
     func dismissActiveUnlock() {
@@ -824,5 +879,70 @@ final class GrowthStore: ObservableObject {
     private func showNextUnlockIfNeeded() {
         guard activeUnlock == nil, !unlockQueue.isEmpty else { return }
         activeUnlock = unlockQueue.removeFirst()
+    }
+
+    private func unlockSatisfiedHiddenTitles(showPresentation: Bool = true) {
+        guard let catalog = SharedDataStore.shared.titleRules else { return }
+
+        var snapshot = AchievementSnapshot()
+        snapshot.set(recipeCompletionCount, metric: "recipeCompletionCount")
+        snapshot.set(cookingStreakDays, metric: "cookingStreakDays")
+        snapshot.set(diceRollCount, metric: "diceRollCount")
+        snapshot.set(mysticCastCount, metric: "mysticCastCount")
+        snapshot.set(partyAssignmentCount, metric: "partyAssignmentCount")
+
+        let matches = AchievementRuleEngine.newlySatisfied(
+            catalog: catalog,
+            snapshot: snapshot,
+            excluding: unlockedHiddenTitleIDs
+        )
+        for record in matches {
+            unlockHiddenTitle(id: record.id, showPresentation: showPresentation)
+        }
+    }
+
+    private func recordCookingDay(date: Date = .now) {
+        let today = Self.dayKey(for: date)
+        guard lastCompletionDayKey != today else { return }
+
+        let yesterday = Self.dayKey(for: Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date)
+        cookingStreakDays = lastCompletionDayKey == yesterday ? cookingStreakDays + 1 : 1
+        lastCompletionDayKey = today
+    }
+
+    private func loadState() {
+        guard let data = storage.data(forKey: storageKey),
+              let state = try? JSONDecoder().decode(GrowthStoreState.self, from: data) else { return }
+
+        recipeCompletionCount = state.recipeCompletionCount
+        cookingStreakDays = state.cookingStreakDays
+        diceRollCount = state.diceRollCount
+        mysticCastCount = state.mysticCastCount
+        partyAssignmentCount = state.partyAssignmentCount
+        unlockedHiddenTitleIDs = Set(state.unlockedHiddenTitleIDs)
+        displayHiddenTitleID = state.displayHiddenTitleID
+        lastCompletionDayKey = state.lastCompletionDayKey
+    }
+
+    private func saveState() {
+        let state = GrowthStoreState(
+            recipeCompletionCount: recipeCompletionCount,
+            cookingStreakDays: cookingStreakDays,
+            diceRollCount: diceRollCount,
+            mysticCastCount: mysticCastCount,
+            partyAssignmentCount: partyAssignmentCount,
+            unlockedHiddenTitleIDs: Array(unlockedHiddenTitleIDs).sorted(),
+            displayHiddenTitleID: displayHiddenTitleID,
+            lastCompletionDayKey: lastCompletionDayKey
+        )
+
+        guard let data = try? JSONEncoder().encode(state) else { return }
+        storage.set(data, forKey: storageKey)
+    }
+
+    private static func dayKey(for date: Date) -> String {
+        let start = Calendar.current.startOfDay(for: date)
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: start)
+        return "\(components.year ?? 0)-\(components.month ?? 0)-\(components.day ?? 0)"
     }
 }

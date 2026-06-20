@@ -10,8 +10,9 @@ apps/ios/MeiweiAssistant/
 
 - SwiftUI 构建主要界面
 - SceneKit 承载真六面 3D 骰子
-- UserDefaults + Codable JSON 做第一版本地状态
-- 后续与 `shared/data` 和服务端接口对齐
+- `shared/data/*.json` 作为 bundle 资源读取菜谱、称号、玄学和饭局规则
+- UserDefaults + Codable 做第一版本地状态
+- 后续服务端接口保持与 `shared/data` 同结构
 
 当前原生入口：
 

@@ -1,4 +1,4 @@
-# 🍳 一饭封神
+# 🍳 就美味助手
 
 > 🚀 **Vibe Coding**  
 > 通过 Kiro 编辑器，实现了从需求分析、架构设计到代码实现的全流程开发。
@@ -6,11 +6,10 @@
 
 基于 AI 的智能菜谱生成平台，支持中华八大菜系 + 国际料理，提供营养分析、酒水推荐、菜谱效果图生成等功能。
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-一饭封神-yellow?style=for-the-badge)](https://eat.lz-t.top/)
-[![Vercel](https://img.shields.io/badge/🚀_Vercel-yffs.vercel.app-black?style=for-the-badge&logo=vercel)](https://yffs.vercel.app/)
-[![Netlify](https://img.shields.io/badge/🌐_Netlify-whattoeatai.netlify.app-00C7B7?style=for-the-badge&logo=netlify)](https://whattoeatai.netlify.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-liu--ziting/what--to--eat-black?style=for-the-badge&logo=github)](https://github.com/liu-ziting/what-to-eat)
-[![Config System](https://img.shields.io/badge/⚙️_Dynamic_Config-Real--time_AI_Settings-blue?style=for-the-badge)](https://github.com/liu-ziting/what-to-eat#%EF%B8%8F-动态配置系统)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-就美味助手-yellow?style=for-the-badge)](https://eat.hnchpower.cn/)
+[![Vercel](https://img.shields.io/badge/🚀_Vercel-eat.hnchpower.cn-black?style=for-the-badge&logo=vercel)](https://eat.hnchpower.cn/)
+[![GitHub](https://img.shields.io/badge/GitHub-wangmiao033/eat.hnchpower.cn-black?style=for-the-badge&logo=github)](https://github.com/wangmiao033/eat.hnchpower.cn)
+[![Config System](https://img.shields.io/badge/⚙️_Dynamic_Config-Real--time_AI_Settings-blue?style=for-the-badge)](https://github.com/wangmiao033/eat.hnchpower.cn#%EF%B8%8F-动态配置系统)
 
 ## 🚀 核心功能
 
@@ -41,8 +40,8 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/liu-ziting/what-to-eat.git
-cd what-to-eat
+git clone https://github.com/wangmiao033/eat.hnchpower.cn.git
+cd eat.hnchpower.cn
 
 # 安装依赖
 npm install
@@ -74,11 +73,11 @@ npm run preview
 
 ### Vercel 部署
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/liu-ziting/what-to-eat&env=VITE_TEXT_GENERATION_BASE_URL,VITE_TEXT_GENERATION_API_KEY,VITE_TEXT_GENERATION_MODEL,VITE_IMAGE_GENERATION_BASE_URL,VITE_IMAGE_GENERATION_API_KEY,VITE_IMAGE_GENERATION_MODEL&envDescription=AI%20API%20配置&envLink=https://github.com/liu-ziting/what-to-eat%23环境变量配置)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wangmiao033/eat.hnchpower.cn&env=VITE_TEXT_GENERATION_BASE_URL,VITE_TEXT_GENERATION_API_KEY,VITE_TEXT_GENERATION_MODEL,VITE_IMAGE_GENERATION_BASE_URL,VITE_IMAGE_GENERATION_API_KEY,VITE_IMAGE_GENERATION_MODEL&envDescription=AI%20API%20配置&envLink=https://github.com/wangmiao033/eat.hnchpower.cn%23环境变量配置)
 
 ### Netlify 部署
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/liu-ziting/what-to-eat)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/wangmiao033/eat.hnchpower.cn)
 
 > 📖 详细部署指南请参考：[DEPLOYMENT.md](./DEPLOYMENT.md)
 
@@ -190,7 +189,7 @@ src/
 
 ## 📈 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=liu-ziting/what-to-eat&type=Date)](https://www.star-history.com/#liu-ziting/what-to-eat&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=wangmiao033/eat.hnchpower.cn&type=Date)](https://www.star-history.com/#wangmiao033/eat.hnchpower.cn&Date)
 
 ## 🙏 致谢
 

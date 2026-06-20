@@ -4,13 +4,13 @@
 
 ### Vercel 部署
 
--   **地址**: https://yffs.vercel.app/
+-   **地址**: https://eat.hnchpower.cn/
 -   **特点**: 自动部署、边缘网络、无服务器函数支持
 -   **配置文件**: `vercel.json`
 
 ### Netlify 部署
 
--   **地址**: https://whattoeatai.netlify.app/
+-   **地址**: https://eat.hnchpower.cn/
 -   **特点**: 持续部署、表单处理、重定向规则
 -   **配置文件**: `netlify.toml`
 
@@ -41,7 +41,7 @@ VITE_IMAGE_GENERATION_MODEL=cogview-3-flash
 5. **部署**：Vercel 会自动构建和部署
 
 或者使用一键部署：
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/liu-ziting/what-to-eat&env=VITE_TEXT_GENERATION_BASE_URL,VITE_TEXT_GENERATION_API_KEY,VITE_TEXT_GENERATION_MODEL,VITE_IMAGE_GENERATION_BASE_URL,VITE_IMAGE_GENERATION_API_KEY,VITE_IMAGE_GENERATION_MODEL&envDescription=AI%20API%20配置)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wangmiao033/eat.hnchpower.cn&env=VITE_TEXT_GENERATION_BASE_URL,VITE_TEXT_GENERATION_API_KEY,VITE_TEXT_GENERATION_MODEL,VITE_IMAGE_GENERATION_BASE_URL,VITE_IMAGE_GENERATION_API_KEY,VITE_IMAGE_GENERATION_MODEL&envDescription=AI%20API%20配置)
 
 ### Netlify 部署步骤
 
@@ -56,7 +56,7 @@ VITE_IMAGE_GENERATION_MODEL=cogview-3-flash
 6. **部署**：Netlify 会自动构建和部署
 
 或者使用一键部署：
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/liu-ziting/what-to-eat)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/wangmiao033/eat.hnchpower.cn)
 
 ## 🔍 获取 Netlify Site ID
 

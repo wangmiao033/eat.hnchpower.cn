@@ -21,13 +21,12 @@
                     </p>
                     <p class="text-sm leading-relaxed pt-2 border-t border-gray-200">
                         <span class="text-gray-600">开源地址，欢迎Star⭐：</span>
-                        <a href="https://github.com/liu-ziting/what-to-eat" target="_blank" class="text-blue-600 hover:text-blue-700 underline">
-                            github.com/liu-ziting/what-to-eat
+                        <a href="https://github.com/wangmiao033/eat.hnchpower.cn" target="_blank" class="text-blue-600 hover:text-blue-700 underline">
+                            github.com/wangmiao033/eat.hnchpower.cn
                         </a>
                     </p>
                     <p class="text-sm leading-relaxed text-gray-600">
-                        更多AI开源项目，请访问：
-                        <a href="https://vibecoding.lz-t.top/" target="_blank" class="text-blue-600 hover:text-blue-700 underline break-all"> vibecoding.lz-t.top </a>
+                        当前版本已整理为“就美味助手”，可在仓库中继续配置模型、部署和二次开发。
                     </p>
                 </div>
                 <div class="flex gap-3">

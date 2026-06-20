@@ -7,7 +7,7 @@
             <!-- 页面标题 -->
             <div class="mb-6">
                 <div class="bg-blue-500 text-white px-4 py-2 rounded-t-lg border-2 border-[#0A0910] border-b-0 inline-block">
-                    <span class="font-bold">封神图鉴</span>
+                    <span class="font-bold">美味图库</span>
                 </div>
                 <div class="bg-white border-2 border-[#0A0910] rounded-lg rounded-tl-none p-4 md:p-6">
                     <div class="flex items-center justify-between">
@@ -16,7 +16,7 @@
                                 <span class="text-white text-2xl">🖼️</span>
                             </div>
                             <div>
-                                <h1 class="text-md font-bold text-gray-800">AI厨艺的视觉宝典</h1>
+                                <h1 class="text-md font-bold text-gray-800">菜品效果图与生成记录</h1>
                                 <p class="text-gray-600 text-xs">共生成了 {{ images.length }} 张菜品图片</p>
                             </div>
                         </div>

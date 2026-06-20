@@ -4,6 +4,36 @@
         <GlobalNavigation />
 
         <div class="max-w-7xl mx-auto">
+            <section class="mb-6 bg-white border-2 border-[#0A0910] rounded-lg p-4 md:p-6 shadow-lg">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center border-2 border-[#0A0910] flex-shrink-0">
+                            <span class="text-white text-2xl md:text-3xl font-black">味</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-orange-600 mb-1">{{ APP_NAME }}</p>
+                            <h1 class="text-2xl md:text-4xl font-black text-dark-800 leading-tight">{{ APP_TAGLINE }}</h1>
+                            <p class="text-sm md:text-base text-gray-600 mt-2 max-w-2xl">按现有食材、菜系和口味要求生成家常菜谱，结果可以收藏、生成图片，也能继续延展成一桌菜单。</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 lg:min-w-[21rem]">
+                        <div class="border-2 border-[#0A0910] rounded-lg bg-yellow-100 p-3 text-center">
+                            <div class="text-xl mb-1">🥬</div>
+                            <div class="text-xs font-bold text-gray-800">食材</div>
+                        </div>
+                        <div class="border-2 border-[#0A0910] rounded-lg bg-green-100 p-3 text-center">
+                            <div class="text-xl mb-1">🍳</div>
+                            <div class="text-xs font-bold text-gray-800">菜谱</div>
+                        </div>
+                        <div class="border-2 border-[#0A0910] rounded-lg bg-blue-100 p-3 text-center">
+                            <div class="text-xl mb-1">⭐</div>
+                            <div class="text-xs font-bold text-gray-800">收藏</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- 步骤1: 输入食材 -->
             <div class="mb-6">
                 <div class="bg-pink-400 text-white px-4 py-2 rounded-t-lg border-2 border-[#0A0910] border-b-0 inline-block">
@@ -298,10 +328,10 @@
                     </div>
                 </div>
 
-                <!-- 步骤3: 交给大师 -->
+                <!-- 步骤3: 交给助手 -->
                 <div class="max-sm:mt-10">
                     <div class="bg-orange-400 text-white px-4 py-2 rounded-t-lg border-2 border-[#0A0910] border-b-0 inline-block">
-                        <span class="font-bold">3. 交给大师</span>
+                        <span class="font-bold">3. 交给助手</span>
                     </div>
                     <div class="bg-white border-2 border-[#0A0910] rounded-lg rounded-tl-none p-4 md:p-6 h-full">
                         <div class="text-center h-full flex flex-col">
@@ -309,7 +339,7 @@
                                 <span class="text-white text-2xl">👨‍🍳</span>
                             </div>
                             <h2 class="text-xl font-bold text-dark-800 mb-2">准备开始烹饪</h2>
-                            <p class="text-gray-600 mb-4 text-sm">大师已准备就绪，点击按钮开始创作美味佳肴</p>
+                            <p class="text-gray-600 mb-4 text-sm">助手已准备就绪，点击按钮开始整理菜谱</p>
 
                             <!-- 当前配置预览 -->
                             <div class="bg-gray-50 rounded-lg p-3 mb-4 text-left flex-1">
@@ -329,9 +359,9 @@
                                     <span v-else class="text-xs text-gray-400">未添加食材</span>
                                 </div>
 
-                                <!-- 菜系和大师选择 -->
+                                <!-- 菜系和主厨选择 -->
                                 <div class="mb-2">
-                                    <span class="text-xs font-medium text-gray-600">菜系大师 ({{ selectedCuisines.length }})：</span>
+                                    <span class="text-xs font-medium text-gray-600">推荐主厨 ({{ selectedCuisines.length }})：</span>
                                     <div v-if="selectedCuisines.length > 0 && !customPrompt.trim()" class="mt-1">
                                         <div
                                             v-for="cuisineId in selectedCuisines"
@@ -342,7 +372,7 @@
                                             <span>{{ cuisines.find(c => c.id === cuisineId)?.name }}</span>
                                         </div>
                                     </div>
-                                    <span v-else-if="!customPrompt.trim()" class="text-xs text-gray-400">未选择大师</span>
+                                    <span v-else-if="!customPrompt.trim()" class="text-xs text-gray-400">未选择主厨</span>
                                     <span v-else class="text-xs text-blue-600">使用自定义要求</span>
                                 </div>
 
@@ -369,7 +399,7 @@
                                     </template>
                                     <template v-else>
                                         <span class="text-xl">✨</span>
-                                        <span>{{ customPrompt.trim() ? '按要求生成' : '交给大师' }}</span>
+                                        <span>{{ customPrompt.trim() ? '按要求生成' : '交给助手' }}</span>
                                     </template>
                                 </span>
                             </button>
@@ -378,7 +408,7 @@
                             <div class="text-sm">
                                 <p v-if="customPrompt.trim()" class="text-blue-600">🎯 将根据您的自定义要求生成菜谱</p>
                                 <p v-else-if="selectedCuisines.length > 0" class="text-green-600">🍽️ 将生成 {{ selectedCuisines.length }} 个菜系的菜谱</p>
-                                <p class="text-xs text-gray-500 mt-1">大师将为您精心设计菜谱流程</p>
+                                <p class="text-xs text-gray-500 mt-1">助手将为你整理完整菜谱流程</p>
                             </div>
                         </div>
                     </div>
@@ -436,18 +466,18 @@
                                             <div class="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                                                 <span class="text-orange-500 text-2xl">🤔</span>
                                             </div>
-                                            <h4 class="text-lg font-bold text-gray-800 mb-2">大师表示很为难</h4>
+                                            <h4 class="text-lg font-bold text-gray-800 mb-2">助手表示很为难</h4>
                                             <p class="text-gray-600 text-sm mb-4">{{ cuisineInfo.name }}看了看你的食材，挠了挠头说："这个组合我还没学会呢！"</p>
                                             <p class="text-gray-600 text-sm mb-4">（目前免费模型效果有限，请自行更换模型服务，也有可能是API速率问题，请重试！）</p>
                                         </div>
 
                                         <!-- 建议区域 -->
                                         <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 mb-4">
-                                            <h5 class="text-sm font-bold text-yellow-800 mb-2 flex items-center gap-1 justify-center">💡 大师的建议</h5>
+                                            <h5 class="text-sm font-bold text-yellow-800 mb-2 flex items-center gap-1 justify-center">💡 助手的建议</h5>
                                             <div class="text-xs text-yellow-700 space-y-1">
-                                                <p>• 试试其他菜系大师，他们可能有不同的想法</p>
+                                                <p>• 试试其他菜系主厨，他们可能有不同的想法</p>
                                                 <p>• 调整一下食材搭配，或许会有惊喜</p>
-                                                <p>• 使用自定义要求，给大师一些灵感</p>
+                                                <p>• 使用自定义要求，给助手一些灵感</p>
                                             </div>
                                         </div>
 
@@ -653,6 +683,7 @@
 import { ref, onUnmounted } from 'vue'
 import { cuisines } from '@/config/cuisines'
 import { ingredientCategories } from '@/config/ingredients'
+import { APP_NAME, APP_TAGLINE } from '@/config/app'
 import RecipeCard from '@/components/RecipeCard.vue'
 import GlobalNavigation from '@/components/GlobalNavigation.vue'
 import GlobalFooter from '@/components/GlobalFooter.vue'
@@ -666,7 +697,7 @@ const selectedCuisines = ref<string[]>([])
 const customPrompt = ref('')
 const recipes = ref<Recipe[]>([])
 const isLoading = ref(false)
-const loadingText = ref('大师正在挑选食材...')
+const loadingText = ref('助手正在梳理食材...')
 const resultsSection = ref<HTMLElement | null>(null)
 const errorMessage = ref('')
 const showIngredientPicker = ref(false)
@@ -687,12 +718,12 @@ const cuisineSlots = ref<CuisineSlot[]>([])
 
 // 加载文字轮播 - 暂时未使用
 // const loadingTexts = [
-//     '大师正在挑选食材...',
-//     '大师正在起火热锅...',
-//     '大师正在爆香配料...',
-//     '大师正在调制秘制酱料...',
-//     '大师正在掌控火候...',
-//     '大师正在精心摆盘...',
+//     '助手正在梳理食材...',
+//     '助手正在起火热锅...',
+//     '助手正在爆香配料...',
+//     '助手正在调制秘制酱料...',
+//     '助手正在掌控火候...',
+//     '助手正在精心摆盘...',
 //     '美味佳肴即将出炉...'
 // ]
 
@@ -1006,7 +1037,7 @@ const generateRecipes = async () => {
     recipes.value = [] // 清空之前的菜谱
     cuisineSlots.value = [] // 清空菜系槽位
     errorMessage.value = ''
-    loadingText.value = '大师正在挑选食材...' // 重置加载文字
+    loadingText.value = '助手正在梳理食材...' // 重置加载文字
 
     // 清除之前的加载定时器
     if (loadingInterval) {
@@ -1028,7 +1059,7 @@ const generateRecipes = async () => {
         cuisineSlots.value = [
             {
                 id: 'custom',
-                name: '自定义大师',
+                name: '自定义助手',
                 loadingText: '正在根据您的要求创作...',
                 progress: 0
             }
@@ -1179,7 +1210,7 @@ const retryFailedCuisine = async (failedSlot: CuisineSlot) => {
     failedSlot.error = false
     failedSlot.errorMessage = undefined
     failedSlot.progress = 0
-    failedSlot.loadingText = '大师重新思考中...'
+    failedSlot.loadingText = '助手重新思考中...'
 
     // 找到对应的菜系信息
     const cuisine = cuisines.find(c => c.id === failedSlot.id)

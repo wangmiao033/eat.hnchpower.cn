@@ -4,17 +4,17 @@
             <!-- 主要信息 -->
             <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
                 <p class="text-sm text-gray-600">
-                    © 2025 一饭封神 |
-                    <a href="https://github.com/liu-ziting/what-to-eat" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline transition-colors"> Github </a>
+                    © 2026 {{ APP_NAME }} |
+                    <a :href="APP_REPOSITORY_URL" target="_blank" rel="noreferrer" class="text-blue-600 hover:text-blue-700 hover:underline transition-colors"> GitHub </a>
                 </p>
-                <p class="text-xs text-gray-500">🚀 Vibe Coding With Kiro AI</p>
+                <p class="text-xs text-gray-500">基于开源项目构建</p>
             </div>
         </div>
     </footer>
 </template>
 
 <script setup lang="ts">
-// Footer组件，无需额外逻辑
+import { APP_NAME, APP_REPOSITORY_URL } from '@/config/app'
 </script>
 
 <style scoped>

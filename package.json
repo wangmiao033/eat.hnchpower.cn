@@ -1,7 +1,7 @@
 {
-    "name": "yifan-fengshen",
+    "name": "jiu-meiwei-assistant",
     "version": "1.0.0",
-    "description": "一饭封神 - AI厨艺大师指导平台",
+    "description": "就美味助手 - AI菜谱与做饭助手",
     "scripts": {
         "dev": "vite",
         "build": "vue-tsc --noEmit && vite build",

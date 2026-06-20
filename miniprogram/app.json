@@ -5,7 +5,7 @@
     "pages/settings/settings"
   ],
   "window": {
-    "navigationBarTitleText": "今天吃啥",
+    "navigationBarTitleText": "就美味助手",
     "navigationBarBackgroundColor": "#f97316",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#fff7ed",

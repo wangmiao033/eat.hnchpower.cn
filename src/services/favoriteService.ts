@@ -1,6 +1,6 @@
 import type { Recipe, FavoriteRecipe } from '@/types'
 
-const FAVORITES_KEY = 'yifan-fengshen-favorites'
+const FAVORITES_KEY = 'jiu-meiwei-assistant-favorites'
 
 /**
  * 收藏服务 - 管理本地收藏的菜谱

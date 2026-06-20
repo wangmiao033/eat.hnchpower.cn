@@ -1,0 +1,5 @@
+export const APP_NAME = '就美味助手'
+export const APP_SHORT_NAME = '就美味'
+export const APP_TAGLINE = '把手边食材变成一顿顺口好饭'
+export const APP_DESCRIPTION = '就美味助手是面向日常做饭的 AI 菜谱助手，可以根据现有食材、口味偏好和场景需求生成可执行的家常菜谱。'
+export const APP_REPOSITORY_URL = 'https://github.com/wangmiao033/eat.hnchpower.cn'

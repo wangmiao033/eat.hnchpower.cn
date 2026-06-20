@@ -6,10 +6,9 @@
 
 An AI-powered intelligent recipe generation platform supporting Chinese Eight Great Cuisines + International Cuisine, providing nutritional analysis, wine pairing, recipe image generation, and comprehensive cooking guidance.
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-YiFan_FengShen-yellow?style=for-the-badge)](https://eat.lz-t.top/)
-[![Vercel](https://img.shields.io/badge/🚀_Vercel-yffs.vercel.app-black?style=for-the-badge&logo=vercel)](https://yffs.vercel.app/)
-[![Netlify](https://img.shields.io/badge/🌐_Netlify-whattoeatai.netlify.app-00C7B7?style=for-the-badge&logo=netlify)](https://whattoeatai.netlify.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-liu--ziting/what--to--eat-black?style=for-the-badge&logo=github)](https://github.com/liu-ziting/what-to-eat)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Jiu_Meiwei_Assistant-yellow?style=for-the-badge)](https://eat.hnchpower.cn/)
+[![Vercel](https://img.shields.io/badge/🚀_Vercel-eat.hnchpower.cn-black?style=for-the-badge&logo=vercel)](https://eat.hnchpower.cn/)
+[![GitHub](https://img.shields.io/badge/GitHub-wangmiao033/eat.hnchpower.cn-black?style=for-the-badge&logo=github)](https://github.com/wangmiao033/eat.hnchpower.cn)
 
 ## 🚀 Core Features
 
@@ -39,8 +38,8 @@ An AI-powered intelligent recipe generation platform supporting Chinese Eight Gr
 
 ```bash
 # Clone the project
-git clone https://github.com/liu-ziting/what-to-eat.git
-cd what-to-eat
+git clone https://github.com/wangmiao033/eat.hnchpower.cn.git
+cd eat.hnchpower.cn
 
 # Install dependencies
 npm install
@@ -70,11 +69,11 @@ npm run preview
 
 ### Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/liu-ziting/what-to-eat&env=VITE_TEXT_GENERATION_BASE_URL,VITE_TEXT_GENERATION_API_KEY,VITE_TEXT_GENERATION_MODEL,VITE_IMAGE_GENERATION_BASE_URL,VITE_IMAGE_GENERATION_API_KEY,VITE_IMAGE_GENERATION_MODEL&envDescription=AI%20API%20Configuration&envLink=https://github.com/liu-ziting/what-to-eat%23environment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wangmiao033/eat.hnchpower.cn&env=VITE_TEXT_GENERATION_BASE_URL,VITE_TEXT_GENERATION_API_KEY,VITE_TEXT_GENERATION_MODEL,VITE_IMAGE_GENERATION_BASE_URL,VITE_IMAGE_GENERATION_API_KEY,VITE_IMAGE_GENERATION_MODEL&envDescription=AI%20API%20Configuration&envLink=https://github.com/wangmiao033/eat.hnchpower.cn%23environment-variables)
 
 ### Deploy to Netlify
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/liu-ziting/what-to-eat)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/wangmiao033/eat.hnchpower.cn)
 
 > 📖 For detailed deployment guide, see: [DEPLOYMENT.md](./DEPLOYMENT.md)
 
@@ -152,7 +151,7 @@ src/
 
 ## 📈 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=liu-ziting/what-to-eat&type=Date)](https://www.star-history.com/#liu-ziting/what-to-eat&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=wangmiao033/eat.hnchpower.cn&type=Date)](https://www.star-history.com/#wangmiao033/eat.hnchpower.cn&Date)
 
 ## 🙏 Acknowledgments
 

@@ -1,6 +1,6 @@
 <view class="page home">
   <view class="hero">
-    <text class="eyebrow">今天吃啥</text>
+    <text class="eyebrow">就美味助手</text>
     <text class="title">摇一下，定一顿饭</text>
     <text class="subtitle">输入手边食材，选几个口味偏好，先给你一个靠谱建议。</text>
   </view>
@@ -23,7 +23,7 @@
     </view>
   </view>
 
-  <button class="primary-button shake-button" bindtap="pickTodayDish">今天吃啥</button>
+  <button class="primary-button shake-button" bindtap="pickTodayDish">帮我推荐</button>
 
   <view wx:if="{{currentDish}}" class="section panel result-card">
     <view class="result-head">

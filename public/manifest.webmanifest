@@ -1,0 +1,21 @@
+{
+  "name": "就美味助手",
+  "short_name": "就美味",
+  "description": "根据食材、口味和场景生成家常菜谱的 AI 做饭助手。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fbbf24",
+  "theme_color": "#fbbf24",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "lifestyle", "utilities"],
+  "lang": "zh-CN"
+}

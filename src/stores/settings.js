@@ -36,7 +36,7 @@ const getLatestEnvSettings = () => {
 }
 
 // 存储键名
-const STORAGE_KEY = 'yifan-fengshen-settings'
+const STORAGE_KEY = 'jiu-meiwei-assistant-settings'
 
 // 全局设置状态
 let settingsInstance = null

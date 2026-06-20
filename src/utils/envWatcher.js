@@ -33,7 +33,7 @@ export const initEnvWatcher = () => {
     const currentSnapshot = getCurrentEnvSnapshot()
 
     // 在localStorage中存储环境变量快照
-    const storageKey = 'yifan-fengshen-env-snapshot'
+    const storageKey = 'jiu-meiwei-assistant-env-snapshot'
     const storedSnapshot = localStorage.getItem(storageKey)
 
     if (storedSnapshot) {
@@ -67,7 +67,7 @@ export const initEnvWatcher = () => {
 // 手动检查环境变量变化
 export const checkEnvChanges = () => {
     const currentSnapshot = getCurrentEnvSnapshot()
-    const storageKey = 'yifan-fengshen-env-snapshot'
+    const storageKey = 'jiu-meiwei-assistant-env-snapshot'
     const storedSnapshot = localStorage.getItem(storageKey)
 
     let hasChanged = false
@@ -102,7 +102,7 @@ export const autoRefreshEnvSettings = () => {
         console.log('检测到环境变量变化，自动刷新配置')
 
         // 清除localStorage中的设置缓存，让应用重新读取环境变量
-        localStorage.removeItem('yifan-fengshen-settings')
+        localStorage.removeItem('jiu-meiwei-assistant-settings')
 
         // 自动刷新页面以应用最新配置
         window.location.reload()

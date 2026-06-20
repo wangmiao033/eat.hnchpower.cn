@@ -154,7 +154,7 @@ const getDifficultyName = (difficulty: 'easy' | 'medium' | 'hard'): string => {
 
 // 分享结果 - 暂时未使用
 // const shareResult = () => {
-//     const shareText = `🔮 料理占卜师为我推荐了：${props.fortune.dishName}\n\n✨ ${props.fortune.reason}\n\n🌟 幸运指数：${props.fortune.luckyIndex}/10\n\n来"一饭封神"体验神秘的料理占卜吧！`
+//     const shareText = `🔮 料理占卜师为我推荐了：${props.fortune.dishName}\n\n✨ ${props.fortune.reason}\n\n🌟 幸运指数：${props.fortune.luckyIndex}/10\n\n来"就美味助手"体验神秘的料理占卜吧！`
 
 //     if (navigator.share) {
 //         navigator.share({

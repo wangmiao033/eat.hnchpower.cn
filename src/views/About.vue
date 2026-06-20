@@ -109,26 +109,26 @@
                     </div>
                 </div>
             </div>
-            <!-- 关于作者 -->
+            <!-- 关于项目 -->
             <div class="relative mt-6">
                 <div class="bg-indigo-500 text-white px-4 py-2 rounded-t-lg border-2 border-[#0A0910] border-b-0 inline-block mb-0">
-                    <span class="font-bold text-lg">👨‍💻 关于作者</span>
+                    <span class="font-bold text-lg">👨‍💻 关于项目</span>
                 </div>
                 <div class="bg-white border-2 border-[#0A0910] rounded-lg rounded-tl-none p-4 md:p-6">
                     <div class="mt-4">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                        <div class="grid grid-cols-1 gap-6 items-center">
                             <div>
                                 <div class="flex items-center gap-4 mb-4">
                                     <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center border-2 border-[#0A0910]">
-                                        <span class="text-white text-2xl font-bold">L</span>
+                                        <span class="text-white text-2xl font-bold">味</span>
                                     </div>
                                     <div>
-                                        <h3 class="text-xl font-bold text-dark-800">liuziting</h3>
-                                        <p class="text-gray-600 text-sm">liuziting2014@163.com</p>
+                                        <h3 class="text-xl font-bold text-dark-800">就美味助手</h3>
+                                        <p class="text-gray-600 text-sm">AI 菜谱与做饭助手</p>
                                     </div>
                                 </div>
                                 <p class="text-gray-700 mb-4 text-sm leading-relaxed">
-                                    🚀 Vibe Coding 通过 Kiro 编辑器，实现了从需求分析、架构设计到代码实现的全流程开发。 致力于探索AI与传统开发的完美结合，让编程变得更加高效和有趣。
+                                    基于开源菜谱项目整理而来，保留食材生成菜谱、随机推荐、酱料设计、收藏和图库等功能，并统一为“就美味助手”的应用体验。
                                 </p>
                                 <div class="space-y-3">
                                     <div class="flex items-center gap-3">
@@ -141,8 +141,8 @@
                                         </div>
                                         <div>
                                             <span class="text-sm font-medium text-gray-700">开源地址</span>
-                                            <a href="https://github.com/liu-ziting/what-to-eat" target="_blank" class="block text-blue-600 hover:text-blue-700 underline text-sm">
-                                                github.com/liu-ziting/what-to-eat
+                                            <a href="https://github.com/wangmiao033/eat.hnchpower.cn" target="_blank" class="block text-blue-600 hover:text-blue-700 underline text-sm">
+                                                github.com/wangmiao033/eat.hnchpower.cn
                                             </a>
                                         </div>
                                     </div>
@@ -151,8 +151,8 @@
                                             <span class="text-white text-sm font-bold">K</span>
                                         </div>
                                         <div>
-                                            <span class="text-sm font-medium text-gray-700">开发工具</span>
-                                            <p class="text-gray-600 text-sm">Kiro 编辑器 - AI驱动的全流程开发</p>
+                                            <span class="text-sm font-medium text-gray-700">技术栈</span>
+                                            <p class="text-gray-600 text-sm">Vue 3、Vite、Tailwind CSS、微信小程序</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
@@ -160,59 +160,14 @@
                                             <span class="text-white text-sm font-bold">AI</span>
                                         </div>
                                         <div>
-                                            <span class="text-sm font-medium text-gray-700">更多 AI 开发项目</span>
+                                            <span class="text-sm font-medium text-gray-700">当前仓库</span>
                                             <a
-                                                href="https://vibecoding.lz-t.top/"
+                                                href="https://github.com/wangmiao033/eat.hnchpower.cn"
                                                 target="_blank"
                                                 class="block text-blue-600 hover:text-blue-700 underline text-sm transition-colors"
                                             >
-                                                vibecoding.lz-t.top
+                                                github.com/wangmiao033/eat.hnchpower.cn
                                             </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <!-- 打赏区域 - 优化版 -->
-                                <div
-                                    class="support-section bg-gradient-to-br from-orange-100 to-red-100 border-4 border-orange-300 rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                                >
-                                    <div class="text-center mb-4">
-                                        <div class="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full mb-3">
-                                            <div class="text-2xl animate-bounce">☕</div>
-                                            <h4 class="font-bold text-lg">支持开发者</h4>
-                                        </div>
-                                        <p class="text-sm text-gray-700 font-medium mb-2">🤖 AI需要成本，您的支持让项目走得更远</p>
-                                        <p class="text-xs text-orange-600 bg-orange-50 px-3 py-1 rounded-full inline-block">每一份支持都是对开源精神的鼓励</p>
-                                    </div>
-
-                                    <div class="flex flex-col md:flex-row items-center gap-4">
-                                        <div class="flex-1 text-center md:text-left">
-                                            <div class="space-y-2 mb-4">
-                                                <div class="flex items-center justify-center md:justify-start gap-2">
-                                                    <span class="text-green-500">✓</span>
-                                                    <span class="text-sm">维持AI服务运行</span>
-                                                </div>
-                                                <div class="flex items-center justify-center md:justify-start gap-2">
-                                                    <span class="text-green-500">✓</span>
-                                                    <span class="text-sm">持续功能更新</span>
-                                                </div>
-                                                <div class="flex items-center justify-center md:justify-start gap-2">
-                                                    <span class="text-green-500">✓</span>
-                                                    <span class="text-sm">开源项目维护</span>
-                                                </div>
-                                            </div>
-                                            <p class="text-xs text-gray-500">扫码支持开发者 →</p>
-                                        </div>
-                                        <div class="flex-shrink-0">
-                                            <div class="relative">
-                                                <img
-                                                    src="/wx.jpg"
-                                                    alt="微信收款码"
-                                                    class="w-32 h-32 md:w-40 md:h-40 border-4 border-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                                />
-                                                <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">微信</div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -231,10 +186,9 @@
                     <div class="mt-4">
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center mb-8">
                             <div>
-                                <h2 class="text-xl font-bold text-dark-800 mb-4">一饭封神 - AI厨艺大师指导平台</h2>
+                                <h2 class="text-xl font-bold text-dark-800 mb-4">就美味助手 - AI菜谱与做饭助手</h2>
                                 <p class="text-gray-700 text-sm mb-4 leading-relaxed">
-                                    一饭封神是一个创新的AI厨艺指导平台，汇聚了中华八大菜系和国际料理的精华。 通过先进的人工智能技术，我们为每一位用户提供个性化的烹饪指导，
-                                    让每一餐都能达到"封神"级别的美味体验。
+                                    就美味助手面向日常家庭厨房：输入手边食材，选择菜系或口味要求，就能生成清楚可执行的菜谱。它也支持随机推荐、整桌菜单、酱料配方和菜品图库。
                                 </p>
                                 <div class="space-y-2">
                                     <div class="flex items-center gap-2">
@@ -243,7 +197,7 @@
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="text-green-500">✓</span>
-                                        <span class="text-sm">多菜系大师级指导</span>
+                                        <span class="text-sm">多菜系风格建议</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="text-green-500">✓</span>
@@ -257,9 +211,9 @@
                             </div>
                             <div class="text-center">
                                 <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg p-8 border-2 border-[#0A0910]">
-                                    <div class="text-6xl mb-4">👨‍🍳</div>
-                                    <h3 class="text-xl font-bold text-white mb-2">LEGENDARY STATUS</h3>
-                                    <p class="text-white text-sm">FROM A SINGLE MEAL!</p>
+                                    <div class="text-6xl mb-4">🍳</div>
+                                    <h3 class="text-xl font-bold text-white mb-2">就美味助手</h3>
+                                    <p class="text-white text-sm">把手边食材变成一顿顺口好饭</p>
                                 </div>
                             </div>
                         </div>
@@ -278,8 +232,8 @@
                                 </div>
                                 <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-lg">
                                     <div class="text-3xl mb-2">👨‍🍳</div>
-                                    <h4 class="font-bold text-dark-800 mb-2 text-sm">大师级指导</h4>
-                                    <p class="text-xs text-gray-600">汇聚各菜系大师的烹饪精髓和独门秘籍</p>
+                                    <h4 class="font-bold text-dark-800 mb-2 text-sm">清晰步骤</h4>
+                                    <p class="text-xs text-gray-600">把食材处理、火候、调味和摆盘拆成可执行步骤</p>
                                 </div>
                                 <div class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg">
                                     <div class="text-3xl mb-2">🎯</div>
@@ -295,7 +249,7 @@
             <!-- 菜系大全 -->
             <div class="relative">
                 <div class="bg-gradient-to-r from-red-500 to-green-500 text-white px-4 py-2 rounded-t-lg border-2 border-[#0A0910] border-b-0 inline-block mb-0">
-                    <span class="font-bold text-lg">👨‍🍳 大师介绍</span>
+                    <span class="font-bold text-lg">👨‍🍳 主厨风格</span>
                 </div>
                 <div class="bg-white border-2 border-[#0A0910] rounded-lg rounded-tl-none p-6">
                     <div class="mt-4">
@@ -354,86 +308,6 @@
                 </div>
             </div>
 
-            <!-- 友情链接 -->
-            <div class="relative" v-if="false">
-                <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-t-lg border-2 border-[#0A0910] border-b-0 inline-block mb-0">
-                    <span class="font-bold text-lg">🔗 其他项目</span>
-                </div>
-                <div class="bg-white border-2 border-[#0A0910] rounded-lg rounded-tl-none p-6">
-                    <div class="mt-4">
-                        <div class="flex items-center gap-2 mb-6">
-                            <span class="text-2xl">🤖</span>
-                            <div>
-                                <p class="text-gray-700 text-sm font-medium">AI 驱动的创新工具集</p>
-                                <p class="text-gray-500 text-xs">以下项目均由Kiro开发完成</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 gap-4">
-                            <a
-                                v-for="link in friendLinks"
-                                :key="link.id"
-                                :href="link.url"
-                                target="_blank"
-                                class="group bg-gradient-to-br from-gray-50 to-blue-50 border-2 border-gray-200 rounded-lg p-5 hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] hover:border-blue-300"
-                            >
-                                <div class="flex items-start gap-4">
-                                    <div
-                                        class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center border-2 border-[#0A0910] group-hover:from-purple-400 group-hover:to-pink-500 transition-all duration-300 flex-shrink-0"
-                                    >
-                                        <span class="text-white text-lg font-bold">{{ link.name.charAt(0) }}</span>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="font-bold text-dark-800 text-base group-hover:text-blue-600 transition-colors mb-2">{{ link.name }}</h4>
-                                        <p class="text-sm text-gray-600 leading-relaxed line-clamp-3">{{ link.description }}</p>
-                                        <div class="flex items-center gap-2 mt-3">
-                                            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                                            <span class="text-xs text-green-600 font-medium">在线访问</span>
-                                            <svg class="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                                ></path>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="mt-6 space-y-4">
-                            <div class="p-4 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg">
-                                <div class="flex items-center gap-3">
-                                    <div class="text-2xl">✨</div>
-                                    <div>
-                                        <p class="text-sm font-medium text-purple-800">持续更新中</p>
-                                        <p class="text-xs text-purple-600">更多AI工具正在开发，敬请期待！</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="p-4 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 rounded-lg">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-3">
-                                        <div class="text-2xl">☕</div>
-                                        <div>
-                                            <p class="text-sm font-medium text-orange-800">喜欢这些项目？</p>
-                                            <p class="text-xs text-orange-600">您的支持是最大的动力</p>
-                                        </div>
-                                    </div>
-                                    <a
-                                        href="#"
-                                        @click.prevent="scrollToSupport"
-                                        class="bg-orange-500 hover:bg-orange-600 text-white text-xs px-3 py-1 rounded-full transition-colors"
-                                    >
-                                        支持开发者
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- 底部 -->
@@ -445,14 +319,6 @@
 import { ref } from 'vue'
 import GlobalNavigation from '@/components/GlobalNavigation.vue'
 import GlobalFooter from '@/components/GlobalFooter.vue'
-
-// 滚动到支持区域
-const scrollToSupport = () => {
-    const supportSection = document.querySelector('.support-section')
-    if (supportSection) {
-        supportSection.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
-}
 
 // 中华八大菜系数据
 const chineseCuisines = ref([
@@ -519,28 +385,6 @@ const chineseCuisines = ref([
         specialty: '重油重色，朴实醇厚',
         dishes: '红烧肉、毛豆腐、臭鳜鱼',
         flavor: '醇厚、鲜美、微甜'
-    }
-])
-
-// 友情链接数据
-const friendLinks = ref([
-    {
-        id: 'xhs',
-        name: '小红书智能解析工具',
-        url: 'https://xhs.lz-t.top/',
-        description: '集成AI投流建议的小红书无水印媒体解析工具。不仅能解析高清内容，更能为您的内容运营提供专业的投流策略建议，助力内容创作者提升传播效果。'
-    },
-    {
-        id: 'prompt',
-        name: '图片转 AI 提示词工具',
-        url: 'https://prompt.lz-t.top/',
-        description: '智能图像分析工具，可将上传的图片转换为高质量的描述性文本提示词。支持多种输出风格，为AI绘画、内容创作提供精准的文本描述。'
-    },
-    {
-        id: 'bot',
-        name: '复古风格 AI 智能对话助手',
-        url: 'https://bot.lz-t.top/',
-        description: '独特的复古像素风格AI聊天应用，支持多种先进AI模型。提供沉浸式的复古游戏界面体验，让AI对话充满怀旧魅力。'
     }
 ])
 

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">就美味助手</title>
+  <desc id="desc">就美味助手应用图标</desc>
+  <rect width="512" height="512" rx="96" fill="#fbbf24"/>
+  <rect x="56" y="56" width="400" height="400" rx="72" fill="#ffffff" stroke="#0a0910" stroke-width="20"/>
+  <circle cx="256" cy="246" r="112" fill="#fb923c" stroke="#0a0910" stroke-width="18"/>
+  <path d="M188 232c20 28 43 42 68 42s48-14 68-42" fill="none" stroke="#0a0910" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="212" cy="204" r="14" fill="#0a0910"/>
+  <circle cx="300" cy="204" r="14" fill="#0a0910"/>
+  <path d="M150 352h212" stroke="#0a0910" stroke-width="24" stroke-linecap="round"/>
+  <path d="M178 352c0 38 34 68 78 68s78-30 78-68" fill="#fde68a" stroke="#0a0910" stroke-width="18" stroke-linejoin="round"/>
+  <text x="256" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="800" fill="#0a0910">味</text>
+</svg>

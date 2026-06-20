@@ -9,7 +9,7 @@
                         class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center border-2 border-[#0A0910]"
                         :class="{ 'rotate-logo': isLogoRotating }"
                     >
-                        <span class="text-white text-xl font-bold">饭</span>
+                        <span class="text-white text-xl font-bold">味</span>
                     </div>
                     <div>
                         <div class="text-2xl font-black text-dark-800 tracking-wider">
@@ -30,7 +30,7 @@
                         :class="$route.path === '/' ? 'bg-yellow-400 text-gray-800' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                     >
                         <span>🏠</span>
-                        <span>主页</span>
+                        <span>助手</span>
                     </router-link>
                     <router-link
                         to="/today-eat"
@@ -46,7 +46,7 @@
                         :class="$route.path === '/table-design' ? 'bg-yellow-400 text-gray-800' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                     >
                         <span>🍽️</span>
-                        <span>满汉全席</span>
+                        <span>一桌好菜</span>
                     </router-link>
                     <router-link
                         to="/fortune-cooking"
@@ -62,7 +62,7 @@
                         :class="$route.path === '/sauce-design' ? 'bg-yellow-400 text-gray-800' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
                     >
                         <span>🥄</span>
-                        <span>酱料大师</span>
+                        <span>酱料助手</span>
                     </router-link>
 
                     <!-- 更多菜单下拉 -->
@@ -101,7 +101,7 @@
                                 :class="$route.path === '/gallery' ? 'bg-yellow-100 text-gray-800' : 'text-gray-700'"
                             >
                                 <span>🖼️</span>
-                                <span>封神图鉴</span>
+                                <span>美味图库</span>
                             </router-link>
                             <router-link
                                 to="/about"
@@ -126,7 +126,7 @@
                             class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center border-2 border-[#0A0910]"
                             :class="{ 'rotate-logo': isLogoRotating }"
                         >
-                            <span class="text-white text-lg font-bold">饭</span>
+                            <span class="text-white text-lg font-bold">味</span>
                         </div>
                         <div>
                             <div class="text-lg font-black text-dark-800 tracking-wider">
@@ -158,7 +158,7 @@
                                 :class="$route.path === '/' ? 'bg-yellow-400 text-gray-800 shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 active:scale-95'"
                             >
                                 <span>🏠</span>
-                                <span>主页</span>
+                                <span>助手</span>
                             </router-link>
                             <router-link
                                 to="/today-eat"
@@ -176,7 +176,7 @@
                                 :class="$route.path === '/table-design' ? 'bg-yellow-400 text-gray-800 shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 active:scale-95'"
                             >
                                 <span>🍽️</span>
-                                <span>满汉全席</span>
+                                <span>一桌好菜</span>
                             </router-link>
                             <router-link
                                 to="/sauce-design"
@@ -185,7 +185,7 @@
                                 :class="$route.path === '/sauce-design' ? 'bg-yellow-400 text-gray-800 shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 active:scale-95'"
                             >
                                 <span>🥄</span>
-                                <span>酱料大师</span>
+                                <span>酱料助手</span>
                             </router-link>
                             <router-link
                                 to="/fortune-cooking"
@@ -212,7 +212,7 @@
                                 :class="$route.path === '/gallery' ? 'bg-yellow-400 text-gray-800 shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 active:scale-95'"
                             >
                                 <span>🖼️</span>
-                                <span>封神图鉴</span>
+                                <span>美味图库</span>
                             </router-link>
                             <router-link
                                 to="/about"
@@ -238,6 +238,7 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import SettingsButton from './SettingsButton.vue'
+import { APP_NAME, APP_TAGLINE } from '@/config/app'
 
 const showMobileMenu = ref(false)
 const showMoreMenu = ref(false)
@@ -256,50 +257,50 @@ const route = useRoute()
 const pageTitle = computed(() => {
     switch (route.path) {
         case '/':
-            return '一饭封神'
+            return APP_NAME
         case '/today-eat':
             return '今日吃啥'
         case '/table-design':
-            return '一桌好菜师'
+            return '一桌好菜'
         case '/how-to-cook':
             return '菜谱指南'
         case '/sauce-design':
-            return '酱料设计大师'
+            return '酱料助手'
         case '/fortune-cooking':
             return '玄学厨房'
         case '/favorites':
             return '我的收藏'
         case '/gallery':
-            return '封神图鉴'
+            return '美味图库'
         case '/about':
-            return '关于一饭封神'
+            return `关于${APP_NAME}`
         default:
-            return '一饭封神'
+            return APP_NAME
     }
 })
 
 const pageSubtitle = computed(() => {
     switch (route.path) {
         case '/':
-            return '灶间有AI，顿顿米其林！'
+            return APP_TAGLINE
         case '/today-eat':
-            return "盲盒美食：'绝了！' or '寄了！'"
+            return '不知道吃什么时，交给盲盒'
         case '/table-design':
-            return '让每顿饭，都有剧本！'
+            return '按人数和场景搭一桌菜'
         case '/how-to-cook':
-            return 'AI大师手把手教学！'
+            return '步骤清楚，照着做'
         case '/sauce-design':
-            return '专业酱料制作，调味灵魂升华！'
+            return '给每道菜配一口好味'
         case '/fortune-cooking':
-            return '星辰指引美食，占卜预见美味！'
+            return '给今天的菜单一点灵感'
         case '/favorites':
             return '珍藏美味，随时回味！'
         case '/gallery':
-            return '每一帧都是厨艺的封神时刻！'
+            return '保存生成过的菜品图片'
         case '/about':
-            return '算法烹万物，一键即封神！'
+            return '开源项目与应用说明'
         default:
-            return 'LEGENDARY STATUS FROM A SINGLE MEAL!'
+            return APP_TAGLINE
     }
 })
 

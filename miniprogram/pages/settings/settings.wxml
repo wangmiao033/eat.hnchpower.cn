@@ -8,7 +8,7 @@
     <text class="card-title">小程序信息</text>
     <view class="row">
       <text class="row-label">名称</text>
-      <text class="row-value">今天吃啥</text>
+      <text class="row-value">就美味助手</text>
     </view>
     <view class="row">
       <text class="row-label">AppID</text>

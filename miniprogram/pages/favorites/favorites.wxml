@@ -5,7 +5,7 @@
   </view>
 
   <view wx:if="{{favorites.length === 0}}" class="empty panel">
-    <text>还没有收藏。去推荐页点“今天吃啥”，看到想吃的就收藏。</text>
+    <text>还没有收藏。去推荐页点“帮我推荐”，看到想吃的就收藏。</text>
   </view>
 
   <view wx:else class="list">

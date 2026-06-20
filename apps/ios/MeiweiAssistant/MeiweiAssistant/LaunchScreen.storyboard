@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="launch-view-controller">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <scene sceneID="launch-scene">
+            <objects>
+                <viewController id="launch-view-controller" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="launch-root-view">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="launch-stack">
+                                <rect key="frame" x="45" y="335" width="303" height="183"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="LaunchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="launch-icon">
+                                        <rect key="frame" x="99.666666666666686" y="0.0" width="104" height="104"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="104" id="launch-icon-width"/>
+                                            <constraint firstAttribute="height" constant="104" id="launch-icon-height"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="美味助手" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="launch-title">
+                                        <rect key="frame" x="86.666666666666686" y="118" width="130" height="37"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                        <color key="textColor" red="0.090196078431372548" green="0.090196078431372548" blue="0.078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="今晚吃什么，交给一点灵感" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="YES" minimumScaleFactor="0.85" translatesAutoresizingMaskIntoConstraints="NO" id="launch-subtitle">
+                                        <rect key="frame" x="0.0" y="169" width="303" height="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" red="0.45098039215686275" green="0.4392156862745098" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="launch-safe-area"/>
+                        <color key="backgroundColor" red="0.96470588235294119" green="0.95686274509803926" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="launch-stack" firstAttribute="centerY" secondItem="launch-root-view" secondAttribute="centerY" constant="-20" id="launch-stack-center-y"/>
+                            <constraint firstItem="launch-stack" firstAttribute="centerX" secondItem="launch-root-view" secondAttribute="centerX" id="launch-stack-center-x"/>
+                            <constraint firstItem="launch-stack" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="launch-safe-area" secondAttribute="leading" constant="32" id="launch-stack-leading"/>
+                            <constraint firstItem="launch-safe-area" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="launch-stack" secondAttribute="trailing" constant="32" id="launch-stack-trailing"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="launch-first-responder" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="52" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="LaunchIcon" width="96" height="96"/>
+    </resources>
+</document>

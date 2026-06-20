@@ -778,12 +778,12 @@ final class GrowthStore: ObservableObject {
     }
 
     func recordRecipeCompletion() {
-        let previousTitle = currentMainTitle
+        let previousTitleID = unlockedMainTitle(for: recipeCompletionCount)?.id
         recipeCompletionCount += 1
         recordCookingDay()
         let newTitle = currentMainTitle
 
-        if previousTitle.id != newTitle.id {
+        if previousTitleID != newTitle.id {
             let nextText = nextMainTitle.map {
                 "再完成 \($0.requiredRecipeCount - recipeCompletionCount) 道菜，即可解锁：\($0.quality.rawValue) · \($0.title)"
             }
@@ -879,6 +879,10 @@ final class GrowthStore: ObservableObject {
     private func showNextUnlockIfNeeded() {
         guard activeUnlock == nil, !unlockQueue.isEmpty else { return }
         activeUnlock = unlockQueue.removeFirst()
+    }
+
+    private func unlockedMainTitle(for count: Int) -> MainTitleDefinition? {
+        TitleCatalog.main.last(where: { count >= $0.requiredRecipeCount })
     }
 
     private func unlockSatisfiedHiddenTitles(showPresentation: Bool = true) {

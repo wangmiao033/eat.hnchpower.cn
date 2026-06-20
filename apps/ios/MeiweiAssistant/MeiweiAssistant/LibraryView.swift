@@ -9,8 +9,8 @@ struct LibraryView: View {
             VStack(alignment: .leading, spacing: 18) {
                 HStack {
                     VStack(alignment: .leading, spacing: 5) {
-                        Text("个人收藏").font(.caption.weight(.semibold)).foregroundStyle(AppTheme.secondary)
-                        Text("我的菜谱").font(.system(size: 34, weight: .bold))
+                        Text("菜谱、收藏与做过").font(.caption.weight(.semibold)).foregroundStyle(AppTheme.secondary)
+                        Text("菜谱库").font(.system(size: 34, weight: .bold))
                     }
                     Spacer()
                     Image(systemName: "square.grid.2x2")
@@ -19,9 +19,10 @@ struct LibraryView: View {
                 }
 
                 Picker("菜谱分类", selection: $segment) {
-                    Text("收藏").tag(0)
-                    Text("做过").tag(1)
-                    Text("菜单").tag(2)
+                    Text("菜谱库").tag(0)
+                    Text("收藏").tag(1)
+                    Text("做过").tag(2)
+                    Text("菜单").tag(3)
                 }
                 .pickerStyle(.segmented)
 

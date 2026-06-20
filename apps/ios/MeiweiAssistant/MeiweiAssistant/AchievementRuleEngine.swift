@@ -47,6 +47,40 @@ struct AchievementRule: Codable, Hashable {
     let value: Int
     let filters: [String: CatalogJSONValue]?
     let window: String?
+
+    enum CodingKeys: String, CodingKey {
+        case metric, `operator`, value, filters, window
+    }
+
+    init(metric: String, operator: String, value: Int, filters: [String: CatalogJSONValue]? = nil, window: String? = nil) {
+        self.metric = metric
+        self.operator = `operator`
+        self.value = value
+        self.filters = filters
+        self.window = window
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        metric = try container.decode(String.self, forKey: .metric)
+        `operator` = try container.decode(String.self, forKey: .operator)
+        filters = try container.decodeIfPresent([String: CatalogJSONValue].self, forKey: .filters)
+        window = try container.decodeIfPresent(String.self, forKey: .window)
+
+        if let intValue = try? container.decode(Int.self, forKey: .value) {
+            value = intValue
+        } else if let boolValue = try? container.decode(Bool.self, forKey: .value) {
+            value = boolValue ? 1 : 0
+        } else if let stringValue = try? container.decode(String.self, forKey: .value),
+                  let intValue = Int(stringValue) {
+            value = intValue
+        } else {
+            throw DecodingError.typeMismatch(
+                Int.self,
+                .init(codingPath: container.codingPath + [CodingKeys.value], debugDescription: "Expected Int, Bool, or numeric String")
+            )
+        }
+    }
 }
 
 struct HiddenTitleRuleRecord: Codable, Identifiable {

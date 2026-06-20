@@ -30,7 +30,7 @@ struct TodayView: View {
                 Text(Date.now.formatted(.dateTime.month().day().weekday(.wide)))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(AppTheme.secondary)
-                Text("今天，好好吃饭")
+                Text("今天吃什么")
                     .font(.system(size: 34, weight: .bold, design: .default))
                     .tracking(-1.2)
             }
@@ -81,7 +81,7 @@ struct TodayView: View {
                     .foregroundStyle(AppTheme.accent)
                 Text(selectedRecipe.name)
                     .font(.system(size: 30, weight: .bold))
-                Text("\(selectedRecipe.subtitle) 你常选“快手”和“下饭”，今天正合适。")
+                Text("\(selectedRecipe.subtitle) 今天先从这道能下锅的推荐开始。")
                     .font(.subheadline)
                     .foregroundStyle(AppTheme.secondary)
                     .lineSpacing(4)

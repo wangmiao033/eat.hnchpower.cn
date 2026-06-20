@@ -274,21 +274,24 @@ struct TrueSixSidedRecipeDiceView: UIViewRepresentable {
                 let t = min(1, max(0, Float(elapsed / duration)))
 
                 if t < 0.73 {
-                    let spinAngle = t * (.pi * 9.4)
-                    let wobble = simd_quatf(angle: sin(t * .pi * 5) * 0.16, axis: SIMD3<Float>(0, 0, 1))
+                    let spinAngle = t * (Float.pi * 9.4)
+                    let wobbleAngle = sin(t * Float.pi * 5) * 0.16
+                    let wobble = simd_quatf(angle: wobbleAngle, axis: SIMD3<Float>(0, 0, 1))
+                    let primaryBounce = sin((t / 0.90) * Float.pi) * 0.54
+                    let secondaryBounce = abs(sin(t * Float.pi * 6)) * 0.05 * (1 - t)
+
                     node.simdOrientation = simd_normalize(wobble * simd_quatf(angle: spinAngle, axis: axis) * start)
-                    node.position.y = CGFloat(
-                        sin(t / 0.90 * .pi) * 0.54
-                        + abs(sin(t * .pi * 6)) * 0.05 * (1 - t)
-                    )
+                    node.position.y = primaryBounce + secondaryBounce
                 } else {
                     if settleStart == nil {
                         settleStart = node.presentation.simdOrientation
                     }
                     let local = (t - 0.73) / 0.27
                     let eased = 1 - pow(1 - local, 4)
+                    let settleBounce = max(0, sin((1 - local) * Float.pi * 2.2) * 0.045 * (1 - local))
+
                     node.simdOrientation = simd_slerp(settleStart ?? start, target, eased)
-                    node.position.y = CGFloat(max(0, sin((1 - local) * .pi * 2.2) * 0.045 * (1 - local)))
+                    node.position.y = settleBounce
                 }
             }
 

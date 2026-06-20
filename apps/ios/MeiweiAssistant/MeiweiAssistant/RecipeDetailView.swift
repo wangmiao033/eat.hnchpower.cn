@@ -106,7 +106,7 @@ struct RecipeDetailView: View {
                 } label: {
                     HStack {
                         Image(systemName: checked.contains(ingredient.id) ? "checkmark.square.fill" : "square")
-                            .foregroundStyle(checked.contains(ingredient.id) ? AppTheme.accent : .tertiary)
+                            .foregroundStyle(checked.contains(ingredient.id) ? AppTheme.accent : AppTheme.secondary)
                         Text(ingredient.name)
                             .strikethrough(checked.contains(ingredient.id))
                         Spacer()

@@ -1,0 +1,31 @@
+{
+  "name": "美味助手",
+  "version": "1.0-complete",
+  "tabs": [
+    "今日",
+    "饭局",
+    "玄学",
+    "菜谱",
+    "我的"
+  ],
+  "features": [
+    "每日食谱推荐",
+    "AI 菜谱创作",
+    "菜谱详情",
+    "分步烹饪",
+    "收藏与菜谱库",
+    "一桌好菜",
+    "酱料助手",
+    "真六面 3D 食谱骰子",
+    "谁做饭谁洗碗",
+    "多人厨房分工",
+    "25 个主线称号",
+    "75 个隐藏称号",
+    "玄学厨房六种玩法",
+    "偏好与提醒设置"
+  ],
+  "mainTitleCount": 25,
+  "hiddenTitleCount": 75,
+  "primaryPrototype": "WebPrototype/index.html",
+  "xcodeProject": "iOS/MeiweiAssistant.xcodeproj"
+}

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>美味助手 · iOS 设计原型</title>
+<style>
+:root{
+  --canvas:#efede8;
+  --surface:#f8f7f3;
+  --card:#ffffff;
+  --ink:#171714;
+  --muted:#77766f;
+  --line:rgba(23,23,20,.08);
+  --accent:#d7653b;
+  --accent-dark:#a84328;
+  --moss:#6f7d5a;
+  --sand:#e8ddce;
+  --shadow:0 24px 70px rgba(32,27,21,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--canvas)}
+button,input,textarea{font:inherit}
+button{border:0;cursor:pointer;color:inherit}
+body{overflow-x:hidden}
+.toolbar{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:8px;padding:7px;background:rgba(255,255,255,.74);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.8);border-radius:999px;box-shadow:0 12px 40px rgba(25,21,17,.12)}
+.toolbar button{padding:10px 16px;border-radius:999px;background:transparent;color:#5f5d56;font-weight:650;font-size:13px}
+.toolbar button.active{background:#171714;color:white}
+.prototype-layout{min-height:100vh;display:grid;grid-template-columns:minmax(430px,520px) minmax(360px,520px);gap:70px;align-items:center;justify-content:center;padding:110px 50px 60px}
+.notes{max-width:470px}
+.notes .kicker{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:750;margin-bottom:18px}
+.notes h1{font-size:48px;line-height:1.05;letter-spacing:-.04em;margin:0 0 22px;font-weight:780}
+.notes .lead{font-size:18px;line-height:1.75;color:#64625c;margin:0 0 34px}
+.note-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note-card{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.82);border-radius:22px;padding:18px;box-shadow:0 12px 32px rgba(38,31,24,.05)}
+.note-card b{display:block;font-size:14px;margin-bottom:7px}
+.note-card span{font-size:13px;line-height:1.55;color:#77746d}
+.phone-wrap{position:relative;display:flex;justify-content:center}
+.phone{width:423px;height:882px;border-radius:64px;background:#11110f;padding:15px;box-shadow:0 42px 110px rgba(35,29,22,.26),inset 0 0 0 1px rgba(255,255,255,.16);position:relative;flex:none}
+.phone:before{content:"";position:absolute;left:50%;top:13px;transform:translateX(-50%);width:124px;height:34px;border-radius:0 0 20px 20px;background:#11110f;z-index:50}
+.phone-screen{width:393px;height:852px;border-radius:50px;overflow:hidden;background:var(--surface);position:relative}
+.app-screen{position:absolute;inset:0;background:var(--surface);overflow:hidden}
+.screen-scroll{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;padding-bottom:112px}
+.screen-scroll::-webkit-scrollbar{display:none}
+.app-screen>.statusbar+.screen-scroll{padding-top:47px}
+.statusbar{height:47px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 25px 9px;font-size:12px;font-weight:700;position:relative;z-index:12}
+.status-icons{display:flex;align-items:center;gap:5px}
+.status-icons svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav-header{display:flex;align-items:center;justify-content:space-between;padding:13px 22px 18px}
+.nav-date{font-size:13px;color:var(--muted);font-weight:620}
+.nav-title{font-size:33px;line-height:1.08;letter-spacing:-.045em;margin-top:6px;font-weight:760}
+.avatar,.round-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.84);box-shadow:0 8px 24px rgba(36,30,25,.08)}
+.avatar{background:linear-gradient(145deg,#e58a59,#b84a2c);color:white;font-size:16px;font-weight:780}
+.round-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8}
+.section-pad{padding:0 18px}
+.hero-card{border-radius:30px;background:white;overflow:hidden;box-shadow:0 22px 55px rgba(48,38,29,.13);position:relative}
+.hero-art{height:260px;position:relative;overflow:hidden;background:#734537}
+.hero-art svg{width:100%;height:100%;display:block}
+.hero-badge{position:absolute;top:17px;left:17px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.78);backdrop-filter:blur(16px);font-size:12px;font-weight:750;letter-spacing:.02em}
+.hero-content{padding:20px 20px 21px}
+.eyebrow{font-size:12px;color:var(--accent);font-weight:780;letter-spacing:.08em;text-transform:uppercase}
+.dish-title{font-size:29px;line-height:1.15;letter-spacing:-.03em;font-weight:760;margin:7px 0 9px}
+.dish-reason{font-size:13px;line-height:1.55;color:var(--muted)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.meta span{font-size:12px;background:#f1f0eb;border-radius:999px;padding:7px 10px;color:#5f5d57;font-weight:620}
+.hero-actions{display:flex;gap:10px;margin-top:18px}
+.primary{height:48px;border-radius:16px;background:var(--ink);color:white;font-weight:720;flex:1;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 9px 20px rgba(20,20,18,.18)}
+.primary svg,.secondary svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.secondary{height:48px;border-radius:16px;background:#f0eee8;padding:0 16px;font-weight:680;display:flex;align-items:center;justify-content:center;gap:7px}
+.section-title-row{display:flex;align-items:flex-end;justify-content:space-between;margin:29px 2px 13px}
+.section-title-row h2{font-size:20px;letter-spacing:-.025em;margin:0}
+.section-title-row button{font-size:12px;color:var(--muted);background:transparent;padding:4px}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mini-card{background:white;border-radius:22px;overflow:hidden;box-shadow:0 10px 28px rgba(39,33,27,.07)}
+.mini-art{height:104px;overflow:hidden}
+.mini-art svg{width:100%;height:100%;display:block}
+.mini-copy{padding:12px 13px 14px}
+.mini-copy b{display:block;font-size:15px;letter-spacing:-.015em;margin-bottom:5px}
+.mini-copy span{font-size:11px;color:var(--muted)}
+.tabbar{position:absolute;left:14px;right:14px;bottom:12px;height:73px;border-radius:25px;background:rgba(250,250,248,.82);backdrop-filter:blur(28px) saturate(1.5);border:1px solid rgba(255,255,255,.9);box-shadow:0 16px 40px rgba(31,27,23,.14);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px 6px;z-index:30}
+.tab{background:transparent;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#89867e;font-size:10px;font-weight:650}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}
+.tab.active{color:var(--ink);background:rgba(226,222,214,.62)}
+.tab.active svg{stroke-width:2.2}
+/* Create */
+.large-page-title{padding:12px 22px 17px}
+.large-page-title .small{font-size:13px;color:var(--accent);font-weight:720}
+.large-page-title h1{font-size:34px;line-height:1.08;letter-spacing:-.045em;margin:6px 0 7px}
+.large-page-title p{font-size:14px;line-height:1.55;color:var(--muted);margin:0}
+.input-card{margin:0 18px;background:white;border-radius:28px;padding:18px;box-shadow:0 16px 45px rgba(43,35,29,.09)}
+.input-label{font-size:13px;font-weight:720;margin-bottom:10px}
+.ingredient-box{min-height:104px;border-radius:20px;background:#f3f1ec;padding:15px 15px 45px;color:#8c8981;font-size:15px;line-height:1.55;position:relative}
+.input-tools{position:absolute;right:10px;bottom:9px;display:flex;gap:7px}
+.tool-btn{width:32px;height:32px;border-radius:50%;background:white;display:grid;place-items:center;box-shadow:0 5px 15px rgba(35,30,25,.08)}
+.tool-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+.label-row{display:flex;justify-content:space-between;align-items:center;margin-top:19px;margin-bottom:11px}
+.label-row b{font-size:13px}
+.label-row span{font-size:11px;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:9px 13px;border-radius:999px;background:#f1f0eb;color:#68665f;font-size:12px;font-weight:660}
+.chip.selected{background:#efe0d7;color:#a4452a;box-shadow:inset 0 0 0 1px rgba(167,70,42,.12)}
+.cuisine-scroll{display:flex;gap:10px;overflow:hidden;margin:0 -18px;padding:0 18px}
+.cuisine-card{width:102px;flex:none;background:#f5f3ef;border-radius:18px;padding:13px 10px}
+.cuisine-card b{font-size:13px;display:block;margin-bottom:5px}
+.cuisine-card span{font-size:10px;color:var(--muted);line-height:1.4}
+.generate-button{margin-top:19px;width:100%;height:52px;border-radius:18px;background:linear-gradient(135deg,#181714,#34322e);color:white;font-weight:730;font-size:15px;box-shadow:0 12px 25px rgba(24,23,20,.18)}
+.magic-note{text-align:center;color:#8b8881;font-size:11px;margin:10px 0 0}
+.result-preview{margin:16px 18px 0;background:#e9dfd2;border-radius:25px;padding:15px;display:flex;gap:14px;align-items:center}
+.preview-art{width:78px;height:78px;border-radius:19px;overflow:hidden;flex:none}
+.preview-art svg{width:100%;height:100%}
+.preview-copy .eyebrow{font-size:10px}
+.preview-copy b{display:block;font-size:17px;margin:5px 0 6px}
+.preview-copy span{font-size:11px;color:#746e66}
+/* Detail */
+.detail-scroll{padding-bottom:45px;background:#f6f4ef}
+.detail-hero{height:322px;position:relative;overflow:hidden}
+.detail-hero svg{width:100%;height:100%;display:block}
+.detail-topbar{position:absolute;top:54px;left:17px;right:17px;display:flex;justify-content:space-between;z-index:4}
+.detail-topbar .round-btn{background:rgba(255,255,255,.68)}
+.detail-sheet{position:relative;margin-top:-31px;background:#f8f7f3;border-radius:32px 32px 0 0;padding:25px 20px 45px;min-height:560px;z-index:3}
+.detail-sheet .dish-title{font-size:31px;margin-bottom:7px}
+.detail-subtitle{font-size:13px;line-height:1.5;color:var(--muted)}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
+.stat{background:white;border-radius:17px;padding:13px 8px;text-align:center;border:1px solid var(--line)}
+.stat b{display:block;font-size:14px}
+.stat span{display:block;font-size:10px;color:var(--muted);margin-top:4px}
+.section-card{background:white;border-radius:23px;padding:17px;margin-top:12px;border:1px solid var(--line)}
+.section-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.section-card-head b{font-size:16px}
+.servings{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.servings button{width:27px;height:27px;border-radius:50%;background:#f1efe9;font-size:16px}
+.ingredient-list{display:grid;gap:12px}
+.ingredient-item{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.check-line{display:flex;align-items:center;gap:10px}
+.check{width:20px;height:20px;border-radius:7px;border:1.5px solid #cbc7be;background:#faf9f7}
+.amount{color:var(--muted)}
+.cook-button{width:100%;height:52px;border-radius:18px;background:var(--ink);color:white;margin-top:14px;font-weight:720;display:flex;align-items:center;justify-content:center;gap:8px}
+.cook-button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.step-row{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.step-row:first-of-type{border-top:0;padding-top:0}
+.step-no{width:26px;height:26px;border-radius:50%;background:#eee2d8;color:#a54529;display:grid;place-items:center;font-size:11px;font-weight:760;flex:none}
+.step-copy{font-size:12px;line-height:1.55;color:#55534d}
+.collapsed-row{display:flex;align-items:center;justify-content:space-between;padding:16px 1px;border-top:1px solid var(--line);font-size:14px;font-weight:650}
+.collapsed-row span{font-weight:500;color:var(--muted);font-size:12px}
+/* Library */
+.segment{margin:0 18px 19px;padding:4px;background:#eae8e2;border-radius:16px;display:grid;grid-template-columns:repeat(3,1fr)}
+.segment button{height:34px;border-radius:12px;background:transparent;font-size:12px;color:#74716a;font-weight:660}
+.segment button.active{background:white;color:var(--ink);box-shadow:0 4px 12px rgba(31,27,23,.08)}
+.library-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 18px}
+.recipe-tile{background:white;border-radius:22px;overflow:hidden;box-shadow:0 10px 28px rgba(41,34,28,.07)}
+.tile-art{height:126px;overflow:hidden;position:relative}
+.tile-art svg{width:100%;height:100%}
+.heart-dot{position:absolute;right:10px;top:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.78);backdrop-filter:blur(10px);display:grid;place-items:center;font-size:13px}
+.tile-copy{padding:12px 12px 14px}
+.tile-copy b{display:block;font-size:15px;line-height:1.25;margin-bottom:5px}
+.tile-copy span{font-size:10px;color:var(--muted)}
+.tools-title{padding:26px 20px 12px;font-size:19px;font-weight:750}
+.tool-list{padding:0 18px;display:grid;gap:10px}
+.tool-row{height:70px;background:white;border-radius:21px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;border:1px solid var(--line)}
+.tool-left{display:flex;align-items:center;gap:12px}
+.tool-icon{width:42px;height:42px;border-radius:15px;display:grid;place-items:center;background:#eee2d8;color:#a54529}
+.tool-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+.tool-copy b{display:block;font-size:14px;margin-bottom:4px}
+.tool-copy span{display:block;font-size:10px;color:var(--muted)}
+.chev{font-size:20px;color:#b5b1aa}
+/* Profile */
+.profile-card{margin:0 18px;background:white;border-radius:27px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:0 13px 38px rgba(38,32,27,.07)}
+.profile-avatar{width:60px;height:60px;border-radius:22px;background:linear-gradient(145deg,#e58a59,#ad4128);color:white;display:grid;place-items:center;font-size:22px;font-weight:760}
+.profile-copy b{font-size:18px;display:block;margin-bottom:4px}.profile-copy span{font-size:12px;color:var(--muted)}
+.settings-list{margin:16px 18px 0;background:white;border-radius:24px;padding:4px 16px}
+.setting-row{height:57px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;font-size:14px}.setting-row:last-child{border-bottom:0}
+.setting-row span{color:var(--muted);font-size:12px}
+
+
+/* Growth & title system */
+.growth-hero{margin:0 18px;border-radius:30px;padding:20px;background:linear-gradient(145deg,#1a1916,#32302b);color:white;box-shadow:0 24px 62px rgba(24,22,18,.22);position:relative;overflow:hidden}
+.growth-hero:before{content:"";position:absolute;width:210px;height:210px;border-radius:50%;right:-95px;top:-115px;background:radial-gradient(circle,rgba(244,184,104,.34),rgba(244,184,104,0) 67%)}
+.growth-top{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+.growth-avatar{width:64px;height:64px;border-radius:22px;background:linear-gradient(145deg,#f09968,#b4472b);display:grid;place-items:center;font-size:22px;font-weight:800;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.growth-copy{min-width:0;flex:1}.growth-name{font-size:12px;color:rgba(255,255,255,.52);margin-bottom:6px}.growth-title{font-size:20px;font-weight:780;letter-spacing:-.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.growth-title small{font-size:10px;letter-spacing:.08em;margin-right:7px;vertical-align:2px}
+.title-quality{display:inline-flex;align-items:center;gap:5px;font-weight:760}.title-quality:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+.q-common{color:#d8d8d4}.q-fine{color:#72a9ff}.q-rare{color:#b987ff}.q-epic{color:#f3a35d}.q-legendary{color:#ff6d55}.q-mythic{color:#f5d66d}.q-supreme{color:#f3c86b}
+.growth-badge{margin-top:9px;display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.10);font-size:10px;color:rgba(255,255,255,.72);font-weight:680}
+.growth-progress{margin-top:19px;position:relative;z-index:1}.growth-progress-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.growth-progress-head b{font-size:12px}.growth-progress-head span{font-size:10px;color:rgba(255,255,255,.48)}
+.progress-track{height:7px;border-radius:999px;background:rgba(255,255,255,.11);margin-top:9px;overflow:hidden}.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#d7653b,#f1b06b);box-shadow:0 0 18px rgba(238,155,91,.48);transition:.5s ease}
+.growth-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px;position:relative;z-index:1}.growth-stat{padding:11px 8px;border-radius:15px;background:rgba(255,255,255,.07);text-align:center}.growth-stat b{display:block;font-size:15px}.growth-stat span{display:block;font-size:9px;color:rgba(255,255,255,.47);margin-top:3px}
+.title-entry{margin:14px 18px 0;border-radius:24px;padding:16px;background:linear-gradient(135deg,#e9e0d6,#f4eee6);display:flex;align-items:center;gap:13px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.62);cursor:pointer}.title-entry-icon{width:48px;height:48px;border-radius:17px;background:#191815;color:#f1c47d;display:grid;place-items:center}.title-entry-icon svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8}.title-entry-copy{flex:1}.title-entry-copy b{display:block;font-size:14px;margin-bottom:5px}.title-entry-copy span{font-size:10px;color:#777168;line-height:1.45;display:block}
+.profile-section-title{padding:23px 21px 10px;display:flex;align-items:center;justify-content:space-between}.profile-section-title b{font-size:18px}.profile-section-title span{font-size:10px;color:var(--muted)}
+.recent-achievements{display:flex;gap:9px;padding:0 18px;overflow-x:auto;scrollbar-width:none}.recent-achievements::-webkit-scrollbar{display:none}.recent-achievement{width:144px;flex:none;border-radius:21px;background:white;padding:14px;border:1px solid var(--line)}.recent-achievement .medal{width:36px;height:36px;border-radius:13px;background:#f1e6dc;display:grid;place-items:center;margin-bottom:11px}.recent-achievement b{display:block;font-size:12px;margin-bottom:4px}.recent-achievement span{font-size:9px;line-height:1.45;color:var(--muted)}
+/* Title hall */
+.title-scroll{background:radial-gradient(circle at 84% 0%,rgba(215,101,59,.13),transparent 25%),var(--surface)}
+.title-hall-header{padding:8px 18px 17px;display:flex;align-items:flex-start;gap:13px}.title-hall-header .round-btn{flex:none}.title-hall-header h1{font-size:31px;letter-spacing:-.04em;margin:3px 0 6px}.title-hall-header p{font-size:11px;line-height:1.5;color:var(--muted);margin:0}
+.equipped-title-card{margin:0 18px;border-radius:29px;padding:19px;background:linear-gradient(145deg,#171613,#2e2b26);color:white;position:relative;overflow:hidden;box-shadow:0 24px 62px rgba(25,22,18,.22)}.equipped-title-card:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;right:-75px;bottom:-100px;background:radial-gradient(circle,rgba(245,186,102,.32),transparent 69%)}
+.equipped-label{font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.42);font-weight:760}.equipped-main{font-size:23px;font-weight:800;margin-top:10px;letter-spacing:-.03em}.equipped-hidden{margin-top:9px;display:inline-flex;align-items:center;gap:6px;font-size:10px;color:#f0c583;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.08)}
+.hall-progress{margin-top:18px;position:relative;z-index:1}.hall-progress-row{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.5);margin-bottom:8px}.hall-progress-row b{color:white;font-size:11px}
+.quality-legend{display:flex;gap:7px;overflow-x:auto;padding:15px 18px 4px;scrollbar-width:none}.quality-legend::-webkit-scrollbar{display:none}.quality-pill{height:31px;padding:0 11px;border-radius:999px;background:white;display:flex;align-items:center;gap:6px;font-size:9px;font-weight:700;white-space:nowrap;border:1px solid var(--line)}.quality-pill i{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
+.hall-section{padding:23px 18px 0}.hall-section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:11px}.hall-section-head b{font-size:18px}.hall-section-head span{font-size:10px;color:var(--muted)}
+.mainline-list{display:grid;gap:9px}.mainline-card{border-radius:20px;background:white;padding:14px;display:flex;align-items:center;gap:12px;border:1px solid var(--line);position:relative;overflow:hidden}.mainline-card.current{background:linear-gradient(135deg,#f5eee7,#fff);border-color:rgba(215,101,59,.17)}.mainline-card.locked{opacity:.62}.mainline-medal{width:42px;height:42px;border-radius:15px;background:#f0eee8;display:grid;place-items:center;font-size:17px}.mainline-copy{flex:1}.mainline-copy span{font-size:9px;color:var(--muted);display:block;margin-bottom:4px}.mainline-copy b{font-size:14px;display:block}.mainline-count{font-size:10px;color:var(--muted);font-weight:700}.current-flag{position:absolute;right:0;top:0;padding:5px 9px;border-radius:0 20px 0 12px;background:#e8d9ce;color:#a2452a;font-size:8px;font-weight:780}
+.hidden-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.hidden-title-card{min-height:126px;border-radius:21px;padding:14px;background:white;border:1px solid var(--line);position:relative;overflow:hidden;cursor:pointer}.hidden-title-card.unlocked{background:linear-gradient(145deg,#fff,#f3ece4)}.hidden-title-card.locked{background:rgba(255,255,255,.54);border-style:dashed}.hidden-title-card .hidden-icon{width:35px;height:35px;border-radius:13px;background:#eee3d9;display:grid;place-items:center;font-size:15px;margin-bottom:11px}.hidden-title-card.locked .hidden-icon{background:#eceae5;color:#aaa}.hidden-title-card b{font-size:12px;display:block;margin-bottom:5px}.hidden-title-card span{font-size:9px;line-height:1.45;color:var(--muted);display:block}.hidden-title-card .equip-note{position:absolute;right:9px;top:9px;font-size:8px;color:var(--accent);font-weight:760}.hidden-title-card.equipped{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.complete-recipe-button{width:100%;height:52px;border-radius:18px;background:linear-gradient(135deg,#d7653b,#b84b2c);color:white;font-weight:760;font-size:14px;box-shadow:0 13px 28px rgba(184,75,44,.22);display:flex;align-items:center;justify-content:center;gap:8px}.complete-recipe-button:disabled{background:#8c8982;box-shadow:none}.completion-note{text-align:center;color:var(--muted);font-size:10px;margin:9px 0 0}
+/* Unlock modal */
+.unlock-overlay{position:fixed;inset:0;z-index:999;display:grid;place-items:center;padding:24px;background:rgba(13,12,10,.55);backdrop-filter:blur(18px);animation:fadeIn .22s ease}.unlock-modal{width:min(360px,92vw);border-radius:31px;background:#f8f6f1;padding:24px;text-align:center;box-shadow:0 35px 110px rgba(0,0,0,.35);position:relative;overflow:hidden;animation:modalRise .5s cubic-bezier(.18,.9,.25,1)}.unlock-modal:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;left:50%;top:-155px;transform:translateX(-50%);background:radial-gradient(circle,rgba(215,101,59,.26),transparent 68%)}.unlock-symbol{width:72px;height:72px;border-radius:25px;background:linear-gradient(145deg,#1a1916,#37342e);color:#f0c47f;display:grid;place-items:center;margin:3px auto 17px;font-size:31px;box-shadow:0 16px 35px rgba(23,21,18,.2);position:relative}.unlock-kicker{font-size:10px;letter-spacing:.18em;color:var(--accent);font-weight:800}.unlock-modal h2{font-size:26px;letter-spacing:-.035em;margin:9px 0 9px}.unlock-modal p{font-size:12px;line-height:1.65;color:var(--muted);margin:0 auto;max-width:280px}.unlock-next{margin-top:15px;padding:11px;border-radius:16px;background:#eeeae2;font-size:10px;color:#68645d;line-height:1.5}.unlock-actions{display:flex;gap:9px;margin-top:20px}.unlock-actions button{height:46px;border-radius:15px;font-size:12px;font-weight:750;flex:1}.unlock-secondary{background:#ebe8e1}.unlock-primary{background:#171714;color:white}.unlock-spark{position:absolute;color:#e7a15f;font-size:14px;animation:sparkFloat 1.8s ease-in-out infinite}.unlock-spark.s1{left:38px;top:66px}.unlock-spark.s2{right:42px;top:94px;animation-delay:.35s}.unlock-spark.s3{left:70px;top:135px;animation-delay:.7s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes modalRise{from{opacity:0;transform:translateY(24px) scale(.94)}to{opacity:1;transform:none}}@keyframes sparkFloat{0%,100%{transform:translateY(0) rotate(0);opacity:.45}50%{transform:translateY(-8px) rotate(20deg);opacity:1}}
+
+/* Party games */
+.party-scroll{background:radial-gradient(circle at 82% 4%,rgba(215,101,59,.13),transparent 24%),radial-gradient(circle at 10% 28%,rgba(111,125,90,.10),transparent 22%),var(--surface)}
+.party-header{padding:12px 22px 17px}
+.party-header .small{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--accent);font-weight:760;letter-spacing:.04em}
+.party-header .small svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;flex:none}
+.party-header h1{font-size:34px;line-height:1.08;letter-spacing:-.045em;margin:7px 0 7px}
+.party-header p{font-size:13px;line-height:1.55;color:var(--muted);margin:0}
+.party-journey{padding:0 18px 26px;display:grid;gap:14px}
+.game-card{border-radius:29px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.92);box-shadow:0 18px 50px rgba(40,33,27,.09);overflow:hidden}
+.game-card.dark{background:linear-gradient(150deg,#181714,#2f2d28);color:white;border-color:rgba(255,255,255,.07);box-shadow:0 25px 60px rgba(22,20,17,.22)}
+.game-head{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 18px 0;gap:14px}
+.step-kicker{font-size:10px;font-weight:780;letter-spacing:.13em;color:var(--accent);text-transform:uppercase;margin-bottom:5px}
+.dark .step-kicker{color:#ef9c77}
+.game-head h2{font-size:20px;letter-spacing:-.025em;margin:0 0 5px}
+.game-head p{font-size:11px;line-height:1.5;color:var(--muted);margin:0}
+.dark .game-head p{color:rgba(255,255,255,.56)}
+.game-no{font-size:32px;font-weight:800;letter-spacing:-.05em;color:rgba(255,255,255,.14);line-height:1}
+.role-card-shell .game-no{color:rgba(23,23,20,.10)}
+.dice-stage{height:276px;margin:10px 14px 16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;isolation:isolate;border-radius:28px;background:radial-gradient(circle at 44% 27%,#fff7df 0,#f5d898 42%,#dca957 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.86),inset 0 -20px 42px rgba(121,67,19,.14),0 12px 28px rgba(0,0,0,.16)}
+.dice-stage:before{content:"";position:absolute;inset:-18%;background:radial-gradient(circle at 31% 20%,rgba(255,255,255,.72),transparent 34%),radial-gradient(circle at 74% 76%,rgba(128,69,17,.16),transparent 42%);pointer-events:none}
+.dice-stage:after{content:"";position:absolute;left:50%;bottom:34px;width:176px;height:45px;transform:translateX(-50%);border-radius:50%;background:rgba(77,43,17,.35);filter:blur(15px);z-index:0;transition:.24s ease}
+.dice-orbit{width:236px;height:236px;display:grid;place-items:center;position:relative;z-index:2}
+.dice-orbit:before{content:"";position:absolute;inset:10px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 67%);pointer-events:none}
+.dice-canvas{width:232px;height:232px;display:block;position:relative;z-index:2;cursor:grab;touch-action:none;filter:drop-shadow(0 17px 15px rgba(77,43,17,.24));transition:filter .25s ease}
+.dice-canvas:active{cursor:grabbing}
+.dice-stage.rolling .dice-canvas{filter:drop-shadow(0 29px 20px rgba(77,43,17,.17))}
+.dice-glint{display:none}
+.dice-shadow{position:absolute;left:50%;bottom:33px;transform:translateX(-50%);width:154px;height:34px;border-radius:50%;background:rgba(67,35,12,.32);filter:blur(14px);transition:.22s ease;z-index:1}
+.dice-stage.rolling .dice-shadow{width:104px;opacity:.22;transform:translateX(-50%) scale(.72)}
+.dice-hint{position:absolute;bottom:11px;left:0;right:0;text-align:center;font-size:10px;color:rgba(70,39,16,.70);font-weight:760;letter-spacing:.01em;z-index:4}
+.dice-result{margin:0 16px 14px;padding:12px;border-radius:19px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px;min-height:67px;transition:.35s ease}
+.dice-result.ready{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+.result-thumb{width:48px;height:48px;border-radius:15px;overflow:hidden;flex:none;background:#756}
+.result-thumb svg{width:100%;height:100%;display:block}
+.dice-copy{min-width:0;flex:1}.dice-copy span{display:block;font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.45);font-weight:760;margin-bottom:4px}.dice-copy b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dice-copy small{display:block;font-size:10px;color:rgba(255,255,255,.55);margin-top:3px}
+.game-action{margin:0 16px 16px;width:calc(100% - 32px);height:48px;border-radius:16px;background:white;color:#171714;font-weight:750;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 9px 24px rgba(0,0,0,.18)}
+.game-action svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.game-action:disabled{opacity:.52;cursor:default}
+.player-section{padding:15px 17px 4px}
+.player-title{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);margin-bottom:10px}.player-title b{color:var(--ink);font-size:12px}
+.player-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.player-row::-webkit-scrollbar{display:none}
+.player-chip{height:35px;border-radius:999px;padding:0 13px;background:#f1efe9;font-size:11px;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.player-chip:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.player-chip.add{width:35px;padding:0;justify-content:center;font-size:18px;color:var(--accent);background:#f3e8e1}.player-chip.add:before{display:none}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:13px 16px}
+.role-card{min-height:92px;border-radius:19px;background:#f3f1eb;border:1px solid rgba(23,23,20,.05);padding:13px;position:relative;overflow:hidden;transition:.35s ease}
+.role-card:after{content:"";position:absolute;width:56px;height:56px;border-radius:50%;right:-17px;bottom:-19px;background:rgba(0,0,0,.035)}
+.role-card .role-icon{font-size:20px;margin-bottom:10px;display:block}.role-card span{font-size:9px;color:var(--muted);letter-spacing:.08em;font-weight:760;text-transform:uppercase;display:block}.role-card b{font-size:16px;display:block;margin-top:3px;letter-spacing:-.02em}
+.role-card.cook.revealed{background:#efe2d9}.role-card.wash.revealed{background:#e5eadf}.role-card.help.revealed{background:#e6e2ed}.role-card.shop.revealed{background:#eee8d9}
+.role-grid.shuffling .role-card{animation:roleShuffle .18s ease-in-out infinite alternate}
+@keyframes roleShuffle{from{transform:translateY(-2px) rotate(-.5deg)}to{transform:translateY(2px) rotate(.5deg)}}
+.role-status{text-align:center;min-height:16px;padding:0 16px 12px;font-size:10px;color:var(--muted)}
+.role-action{margin:0 16px 16px;width:calc(100% - 32px);height:48px;border-radius:16px;background:var(--ink);color:white;font-weight:740;display:flex;align-items:center;justify-content:center;gap:8px}
+.role-action svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.party-finale{border-radius:27px;background:linear-gradient(135deg,#e7dbce,#efe9df);padding:17px;display:flex;align-items:center;justify-content:space-between;gap:15px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55)}
+.party-finale b{display:block;font-size:16px;margin-bottom:5px}.party-finale span{display:block;font-size:10px;line-height:1.45;color:#746f67}
+.party-finale button{height:43px;padding:0 15px;border-radius:14px;background:var(--ink);color:white;font-size:12px;font-weight:740;white-space:nowrap}
+.party-finale button.locked{opacity:.36}
+.more-game-title{font-size:17px;font-weight:760;margin:5px 2px 0}
+.more-game-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.more-game{border-radius:19px;background:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.84);padding:13px;min-height:83px}.more-game i{font-style:normal;font-size:18px}.more-game b{display:block;font-size:12px;margin:9px 0 3px}.more-game span{font-size:9px;line-height:1.4;color:var(--muted);display:block}
+.party-entry{margin-top:14px;border-radius:24px;background:linear-gradient(135deg,#1b1a17,#33312c);color:white;padding:16px;display:flex;align-items:center;gap:13px;box-shadow:0 15px 35px rgba(28,25,21,.18);cursor:pointer}
+.party-entry-die{width:52px;height:52px;border-radius:16px;background:linear-gradient(145deg,#fffefa,#ddd8ce);color:#27251f;display:grid;place-items:center;font-size:30px;box-shadow:inset -4px -5px 8px rgba(0,0,0,.1);transform:rotate(-9deg);flex:none}
+.party-entry-copy{flex:1;min-width:0}.party-entry-copy b{display:block;font-size:14px;margin-bottom:5px}.party-entry-copy span{display:block;font-size:10px;color:rgba(255,255,255,.55);line-height:1.45}.party-entry .chev{color:rgba(255,255,255,.45)}
+@media(prefers-reduced-motion:reduce){.recipe-die{transition:none}.role-grid.shuffling .role-card{animation:none}}
+
+/* Board */
+.board{display:none;min-height:100vh;padding:74px 54px 50px;background:radial-gradient(circle at 18% 10%,#f7f0e7 0,transparent 30%),var(--canvas)}
+.board-header{display:flex;justify-content:space-between;align-items:flex-end;max-width:1800px;margin:0 auto 38px}
+.board-header .kicker{color:var(--accent);font-size:12px;font-weight:760;letter-spacing:.18em;text-transform:uppercase}
+.board-header h1{font-size:42px;letter-spacing:-.04em;margin:9px 0 0}
+.board-header p{max-width:490px;color:var(--muted);font-size:14px;line-height:1.65;margin:0;text-align:right}
+.board-grid{display:grid;grid-template-columns:repeat(3,423px);gap:28px;justify-content:center}
+.board-item .label{margin:0 0 13px 12px;font-size:13px;font-weight:720;color:#67645d}.board-item .label span{color:#a29f97;font-weight:500;margin-left:8px}
+.board .phone{transform:scale(.86);transform-origin:top left;margin-right:-59px;margin-bottom:-122px}
+.board-mode .toolbar,.board-mode .prototype-layout{display:none}
+.board-mode .board{display:block}
+@media(max-width:980px){
+ .prototype-layout{grid-template-columns:1fr;padding:100px 20px 50px;gap:42px}.notes{order:-1;max-width:600px;margin:auto}.notes h1{font-size:38px}.phone{transform:scale(.9)}
+}
+</style>
+</head>
+<body>
+<div class="toolbar" id="toolbar">
+  <button class="active" data-screen="today">今日</button>
+  <button data-screen="party">饭局</button>
+  <button data-screen="create">创作</button>
+  <button data-screen="detail">详情</button>
+  <button data-screen="library">菜谱库</button>
+  <button data-screen="profile">我的</button>
+  <button data-screen="titles">称号</button>
+  <button id="boardButton">六屏总览</button>
+</div>
+
+<div class="prototype-layout">
+  <div class="phone-wrap"><div class="phone"><div class="phone-screen" id="interactivePhone"></div></div></div>
+  <aside class="notes">
+    <div class="kicker">MEIWEI ASSISTANT · iOS</div>
+    <h1>每做一道菜，<br/>都留下成长</h1>
+    <p class="lead">把饭局游戏和称号成长串成一条闭环：骰子决定吃什么，抽签解决谁做饭、谁洗碗；完成菜谱后推进主线称号，并有机会触发隐藏荣誉。</p>
+    <div class="note-grid">
+      <div class="note-card"><b>视觉基调</b><span>暖白底、墨黑正文、陶土橙点缀。图片负责食欲，界面保持克制。</span></div>
+      <div class="note-card"><b>核心导航</b><span>今日、饭局、创作、菜谱、我的。游戏成为明确入口，但仍围绕做饭。</span></div>
+      <div class="note-card"><b>实体 3D 骰子</b><span>圆角实体网格、六面一体成型、凹陷点阵与动态光影；可拖动观察，也可点击掷出菜谱。</span></div>
+      <div class="note-card"><b>公平分工</b><span>两人抽“主厨 / 洗碗”，多人自动扩展为帮厨和采购，可加入历史权重。</span></div>
+      <div class="note-card"><b>主线成长</b><span>菜谱完成数决定等级称号，始终清楚显示当前进度与下一目标。</span></div>
+      <div class="note-card"><b>隐藏惊喜</b><span>深夜做菜、连续下厨、骰子随机等行为触发隐藏称号与解锁动画。</span></div>
+    </div>
+  </aside>
+</div>
+
+<section class="board" id="board">
+  <div class="board-header">
+    <div><div class="kicker">美味助手 · iOS 视觉方向</div><h1>克制的界面，恰到好处的游戏感</h1></div>
+    <p>六个关键页面把“饭局游戏”和“称号成长”接入真实做饭流程：互动负责决策，称号负责长期留存，动效保持克制而有仪式感。</p>
+  </div>
+  <div class="board-grid" id="boardGrid"></div>
+</section>
+
+<script>
+const icon = (name) => {
+ const icons={
+  home:'<path d="M3.5 10.3 12 3.5l8.5 6.8v9.2a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/>',
+  spark:'<path d="m12 2 1.35 4.1L17.5 7.5l-4.15 1.4L12 13l-1.35-4.1L6.5 7.5l4.15-1.4L12 2Z"/><path d="m18.5 13 .75 2.25L21.5 16l-2.25.75L18.5 19l-.75-2.25L15.5 16l2.25-.75.75-2.25Z"/>',
+  book:'<path d="M4 4.5h6.2A2.8 2.8 0 0 1 13 7.3v12.2a2.8 2.8 0 0 0-2.8-2.8H4z"/><path d="M20 4.5h-4.2A2.8 2.8 0 0 0 13 7.3v12.2a2.8 2.8 0 0 1 2.8-2.8H20z"/>',
+  user:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.1-6 7-6s6.2 2 7 6"/>',
+  play:'<path d="m9 7 7 5-7 5z"/>',
+  refresh:'<path d="M19 7v5h-5"/><path d="M18.1 12a7 7 0 1 0-1.3 5"/>',
+  camera:'<path d="M4 7.5h3l1.2-2h7.6l1.2 2h3v11H4z"/><circle cx="12" cy="13" r="3.4"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6.5 11.5A5.5 5.5 0 0 0 12 17a5.5 5.5 0 0 0 5.5-5.5M12 17v4"/>',
+  back:'<path d="m15.5 5-7 7 7 7"/>',
+  heart:'<path d="M20.7 8.7c0 5.2-8.7 10.3-8.7 10.3S3.3 13.9 3.3 8.7A4.5 4.5 0 0 1 12 7.1a4.5 4.5 0 0 1 8.7 1.6Z"/>',
+  timer:'<circle cx="12" cy="13" r="7.5"/><path d="M9.5 2h5M12 5.5V3M12 13l3-2"/>',
+  pot:'<path d="M5 10h14l-1 9H6z"/><path d="M8 10V8h8v2M3 12H1.5M22.5 12H21"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  spoon:'<ellipse cx="9" cy="7" rx="3" ry="4"/><path d="m10.5 10.5 7 9"/>',
+  moon:'<path d="M19 15.5A8 8 0 0 1 8.5 5a8 8 0 1 0 10.5 10.5Z"/>',
+  dice:'<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1" fill="currentColor" stroke="none"/>',
+  users:'<circle cx="9" cy="8" r="3"/><path d="M3.8 20c.6-3.6 2.4-5.5 5.2-5.5s4.6 1.9 5.2 5.5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.8c2.8-.3 4.7 1.4 5.1 4.2"/>',
+  shuffle:'<path d="M3 7h3.2c4.3 0 5.2 10 9.6 10H21"/><path d="m18 14 3 3-3 3"/><path d="M3 17h3.2c1.5 0 2.6-1.2 3.6-2.7M14.2 9.7c.5-1.5 1-2.7 1.6-2.7H21"/><path d="m18 4 3 3-3 3"/>',
+  trophy:'<path d="M8 4h8v4c0 3-1.7 5-4 5s-4-2-4-5z"/><path d="M8 6H4v1c0 2.6 1.5 4 4 4M16 6h4v1c0 2.6-1.5 4-4 4M12 13v4M8.5 20h7M10 17h4"/>',
+  lock:'<rect x="5" y="10" width="14" height="10" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  check:'<path d="m5 12 4 4L19 6"/>',
+  flame:'<path d="M13 2c1 4-2 5-2 8 0 1.4 1 2.5 2.4 2.5 2.7 0 3.4-3 2.2-5 3.2 2.1 4.4 5 3.4 8-1 3-3.5 5-7 5-4.5 0-7.5-3-7.5-7.2 0-3.3 1.8-6.1 4.8-8.4-.3 3.3.9 5.1 2.1 5.1 1.8 0 2.5-3.6 1.6-8Z"/>'
+ };
+ return `<svg viewBox="0 0 24 24" aria-hidden="true">${icons[name]||''}</svg>`;
+};
+const statusBar=()=>`<div class="statusbar"><span>9:41</span><span class="status-icons"><svg viewBox="0 0 16 12"><path d="M1 9h2M5 7h2M9 5h2M13 3h2"/></svg><svg viewBox="0 0 16 12"><path d="M1 5.5c4-4 10-4 14 0M4 8c2.2-2 5.8-2 8 0M7 10.5c.7-.6 1.3-.6 2 0"/></svg><svg viewBox="0 0 22 12"><rect x="1" y="1" width="17" height="10" rx="2"/><path d="M20 4v4"/><path d="M3 3h12v6H3z" fill="currentColor" stroke="none"/></svg></span></div>`;
+const tabbar=(active)=>`<nav class="tabbar">
+ <button class="tab ${active==='today'?'active':''}" data-target="today">${icon('home')}<span>今日</span></button>
+ <button class="tab ${active==='party'?'active':''}" data-target="party">${icon('dice')}<span>饭局</span></button>
+ <button class="tab ${active==='create'?'active':''}" data-target="create">${icon('spark')}<span>创作</span></button>
+ <button class="tab ${active==='library'?'active':''}" data-target="library">${icon('book')}<span>菜谱</span></button>
+ <button class="tab ${active==='profile'?'active':''}" data-target="profile">${icon('user')}<span>我的</span></button>
+</nav>`;
+const art=(kind='tomato')=>{
+ const palettes={tomato:['#5b2f25','#b65d43'],shrimp:['#49614a','#98aa78'],chicken:['#4a382b','#a87958'],tofu:['#7d2d2a','#c65c3e'],noodle:['#68513c','#b99b68'],beef:['#3e2b27','#81554b']};
+ const [a,b]=palettes[kind]||palettes.tomato;
+ let food='';
+ if(kind==='tomato') food=`<g><ellipse cx="180" cy="126" rx="117" ry="91" fill="#f7f2e9"/><ellipse cx="180" cy="127" rx="93" ry="69" fill="#fffaf1"/><g opacity=".98"><path d="M111 117c4-27 34-34 54-19 18 13 7 39-13 48-22 10-46-7-41-29Z" fill="#e5492f"/><path d="M171 106c9-23 38-27 55-10 18 18 4 41-17 46-22 5-47-12-38-36Z" fill="#d93829"/><path d="M139 142c17-19 48-16 59 6 10 20-11 38-31 37-22-1-45-23-28-43Z" fill="#ef5b32"/><path d="M115 96c12-17 37-16 45 3 8 18-8 33-25 31-18-2-32-19-20-34Z" fill="#f2a926"/><path d="M185 140c10-20 37-25 53-8 15 16 3 37-17 43-20 6-47-15-36-35Z" fill="#f3ad2c"/><path d="M151 98c8-18 30-24 45-12 15 12 6 32-10 39-18 8-43-9-35-27Z" fill="#ffc14d"/></g><g fill="#4f8e47"><rect x="151" y="87" width="5" height="17" rx="2" transform="rotate(48 151 87)"/><rect x="196" y="109" width="5" height="18" rx="2" transform="rotate(68 196 109)"/><rect x="165" y="156" width="5" height="17" rx="2" transform="rotate(24 165 156)"/></g></g>`;
+ if(kind==='shrimp') food=`<g><ellipse cx="180" cy="126" rx="118" ry="90" fill="#eee9dd"/><ellipse cx="180" cy="126" rx="94" ry="69" fill="#fdfbf5"/><g fill="#5b8d51"><circle cx="132" cy="110" r="28"/><circle cx="178" cy="101" r="27"/><circle cx="218" cy="121" r="29"/><circle cx="153" cy="149" r="29"/><circle cx="202" cy="157" r="25"/></g><g fill="none" stroke="#ef8f74" stroke-width="16" stroke-linecap="round"><path d="M115 143c18 18 35 10 40-7"/><path d="M170 126c18 17 36 8 39-9"/><path d="M195 164c16 12 31 5 35-9"/></g><g fill="#d95f4b"><circle cx="119" cy="144" r="4"/><circle cx="174" cy="127" r="4"/><circle cx="199" cy="165" r="4"/></g></g>`;
+ if(kind==='chicken') food=`<g><ellipse cx="180" cy="126" rx="118" ry="90" fill="#e9e0d3"/><ellipse cx="180" cy="126" rx="94" ry="69" fill="#fffaf1"/><g fill="#d9a66f"><path d="M105 117c14-21 47-23 61-1 13 20-7 38-31 37-23-1-45-14-30-36Z"/><path d="M157 141c11-25 46-29 62-8 16 22-7 43-31 44-24 1-43-15-31-36Z"/><path d="M180 95c13-21 43-20 55-1 11 18-8 34-28 34-21 0-39-15-27-33Z"/></g><g fill="#79543a"><ellipse cx="135" cy="96" rx="22" ry="14" transform="rotate(25 135 96)"/><ellipse cx="215" cy="139" rx="22" ry="14" transform="rotate(-15 215 139)"/><ellipse cx="153" cy="164" rx="18" ry="11" transform="rotate(14 153 164)"/></g><g stroke="#76915c" stroke-width="5" stroke-linecap="round"><path d="M124 145l30-34M192 169l20-38"/></g></g>`;
+ if(!food) food=`<g><ellipse cx="180" cy="126" rx="118" ry="90" fill="#eee7da"/><ellipse cx="180" cy="126" rx="94" ry="69" fill="#fffaf1"/><g fill="#d9b279"><circle cx="133" cy="113" r="31"/><circle cx="187" cy="103" r="34"/><circle cx="217" cy="147" r="30"/><circle cx="151" cy="156" r="27"/></g></g>`;
+ return `<svg viewBox="0 0 360 240" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="bg-${kind}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="13" stdDeviation="11" flood-opacity=".26"/></filter><filter id="grain"><feTurbulence baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .08 0"/></filter></defs><rect width="360" height="240" fill="url(#bg-${kind})"/><circle cx="48" cy="45" r="70" fill="rgba(255,255,255,.08)"/><circle cx="332" cy="215" r="95" fill="rgba(0,0,0,.07)"/>${food}<rect width="360" height="240" filter="url(#grain)" opacity=".28" style="mix-blend-mode:soft-light"/></svg>`;
+};
+
+const partyDishes=[
+ {name:'番茄炒蛋',meta:'12 分钟 · 快手',kind:'tomato'},
+ {name:'虾仁西兰花',meta:'16 分钟 · 高蛋白',kind:'shrimp'},
+ {name:'香菇滑鸡',meta:'25 分钟 · 清淡',kind:'chicken'},
+ {name:'麻婆豆腐',meta:'20 分钟 · 下饭',kind:'tofu'},
+ {name:'土豆炖牛肉',meta:'55 分钟 · 硬菜',kind:'beef'},
+ {name:'麻酱拌面',meta:'15 分钟 · 一人食',kind:'noodle'}
+];
+const roleTypes=[
+ {key:'cook',label:'主厨',icon:'🔥'},
+ {key:'wash',label:'洗碗',icon:'💧'},
+ {key:'help',label:'帮厨',icon:'🔪'},
+ {key:'shop',label:'采购',icon:'🧺'}
+];
+const partyState={players:['我','小王'],dish:null,dieValue:1,assignments:[]};
+const mainTitles=[
+ {count:1,quality:'普通',q:'common',title:'小厨师'},
+ {count:2,quality:'普通',q:'common',title:'厨房新手'},
+ {count:3,quality:'普通',q:'common',title:'锅铲学徒'},
+ {count:5,quality:'普通',q:'common',title:'烟火小将'},
+ {count:8,quality:'精良',q:'fine',title:'香气捕手'},
+ {count:10,quality:'精良',q:'fine',title:'家常料理师'},
+ {count:15,quality:'精良',q:'fine',title:'调味达人'},
+ {count:20,quality:'精良',q:'fine',title:'风味探索家'},
+ {count:30,quality:'稀有',q:'rare',title:'黄金锅铲手'},
+ {count:40,quality:'稀有',q:'rare',title:'厨房掌勺人'},
+ {count:50,quality:'稀有',q:'rare',title:'百味料理师'},
+ {count:60,quality:'稀有',q:'rare',title:'私房大厨'},
+ {count:80,quality:'史诗',q:'epic',title:'味觉魔法师'},
+ {count:100,quality:'史诗',q:'epic',title:'星级主厨'},
+ {count:120,quality:'史诗',q:'epic',title:'美食鉴赏家'},
+ {count:150,quality:'史诗',q:'epic',title:'传说厨神'},
+ {count:200,quality:'传说',q:'legendary',title:'食神降临'},
+ {count:300,quality:'传说',q:'legendary',title:'万味宗师'},
+ {count:500,quality:'传说',q:'legendary',title:'御膳总管'},
+ {count:800,quality:'传说',q:'legendary',title:'宫廷御厨'},
+ {count:1000,quality:'神话',q:'mythic',title:'天下第一厨'},
+ {count:1500,quality:'神话',q:'mythic',title:'炉火至尊'},
+ {count:2000,quality:'神话',q:'mythic',title:'人间烟火之王'},
+ {count:3000,quality:'神话',q:'mythic',title:'饕餮圣者'},
+ {count:5000,quality:'至尊',q:'supreme',title:'至尊食神'}
+];
+const hiddenTitles={
+ hidden_streak_001:{id:'hidden_streak_001',title:'烟火初燃',category:'坚持类',icon:'🔥',hint:'灶火连续亮了三天。',description:'你已经连续做饭 3 天，烟火气开始成为生活的一部分。'},
+ hidden_random_001:{id:'hidden_random_001',title:'命运开锅',category:'随机互动类',icon:'⚄',hint:'把今晚的菜单交给一点运气。',description:'第一次用骰子随机出菜，今晚由命运替你开锅。'},
+ hidden_late_night_001:{id:'hidden_late_night_001',title:'深夜食堂新人',category:'时间类',icon:'☾',hint:'夜深了，厨房还亮着灯……',description:'第一次在 22:00 后完成料理。'},
+ hidden_retry_001:{id:'hidden_retry_001',title:'不服输的厨师',category:'失败与熟练类',icon:'↻',hint:'一次失手，不代表今晚没有好饭。',description:'第一次失败后重新完成同一道菜。'},
+ hidden_random_003:{id:'hidden_random_003',title:'欧皇厨师',category:'随机互动类',icon:'✦',hint:'有时，骰子也会偏爱同一种味道。',description:'骰子连续 3 次摇到同类菜。'},
+ hidden_explore_001:{id:'hidden_explore_001',title:'新味觉冒险家',category:'探索类',icon:'◈',hint:'试一道从未吃过的菜。',description:'完成一道此前从未吃过的菜。'}
+};
+const userGrowth={recipeCount:7,streakDays:3,hiddenUnlocked:new Set(['hidden_streak_001']),displayHidden:'hidden_streak_001',completedDemo:false};
+const currentMainTitle=()=>[...mainTitles].reverse().find(t=>userGrowth.recipeCount>=t.count)||mainTitles[0];
+const nextMainTitle=()=>mainTitles.find(t=>t.count>userGrowth.recipeCount)||null;
+const mainProgress=()=>{const cur=currentMainTitle(),next=nextMainTitle();if(!next)return 100;return Math.max(0,Math.min(100,((userGrowth.recipeCount-cur.count)/(next.count-cur.count))*100));};
+const visibleMainTitles=()=>{const currentIndex=Math.max(0,mainTitles.findIndex(t=>t===currentMainTitle()));return mainTitles.slice(Math.max(0,currentIndex-1),Math.min(mainTitles.length,currentIndex+4));};
+const diceMarkup=()=>`<div class="dice-orbit"><canvas class="dice-canvas" data-dice-canvas width="420" height="420" aria-label="一体式六面 3D 食谱骰子"></canvas><div class="dice-glint"></div></div>`;
+
+const Q={
+ identity:()=>[0,0,0,1],
+ norm:q=>{const l=Math.hypot(q[0],q[1],q[2],q[3])||1;return q.map(v=>v/l)},
+ axis:(a,rad)=>{const l=Math.hypot(a[0],a[1],a[2])||1,s=Math.sin(rad/2)/l;return [a[0]*s,a[1]*s,a[2]*s,Math.cos(rad/2)]},
+ mul:(a,b)=>[a[3]*b[0]+a[0]*b[3]+a[1]*b[2]-a[2]*b[1],a[3]*b[1]-a[0]*b[2]+a[1]*b[3]+a[2]*b[0],a[3]*b[2]+a[0]*b[1]-a[1]*b[0]+a[2]*b[3],a[3]*b[3]-a[0]*b[0]-a[1]*b[1]-a[2]*b[2]],
+ slerp:(a,b,t)=>{let d=a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3],bb=b;if(d<0){d=-d;bb=b.map(v=>-v)}if(d>.9995)return Q.norm(a.map((v,i)=>v+(bb[i]-v)*t));const th=Math.acos(Math.max(-1,Math.min(1,d))),sn=Math.sin(th);const x=Math.sin((1-t)*th)/sn,y=Math.sin(t*th)/sn;return a.map((v,i)=>v*x+bb[i]*y)},
+ mat3:q=>{const [x,y,z,w]=Q.norm(q),x2=x+x,y2=y+y,z2=z+z,xx=x*x2,xy=x*y2,xz=x*z2,yy=y*y2,yz=y*z2,zz=z*z2,wx=w*x2,wy=w*y2,wz=w*z2;return new Float32Array([1-(yy+zz),xy+wz,xz-wy,xy-wz,1-(xx+zz),yz+wx,xz+wy,yz-wx,1-(xx+yy)])}
+};
+class SolidDiceRenderer{
+ constructor(canvas,{interactive=true,value=5}={}){
+  this.canvas=canvas;this.interactive=interactive;this.value=value;this.orientation=Q.identity();this.height=0;this.rollState=null;this.drag=null;this.destroyed=false;this.last=performance.now();
+  this.gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:true,preserveDrawingBuffer:false})||canvas.getContext('experimental-webgl');
+  if(this.gl){try{this.setupGL()}catch(error){console.warn('D6 WebGL fallback',error);this.gl=null;this.setupFallback()}}else this.setupFallback();
+  this.resize();this.bindPointer();this.frame=this.frame.bind(this);this.raf=requestAnimationFrame(this.frame);
+ }
+ setupFallback(){this.ctx2d=this.canvas.getContext('2d');this.fallback=new Image();this.fallback.src='previews/true-d6-preview.png';this.fallback.onload=()=>this.drawFallback()}
+ setupGL(){
+  const gl=this.gl;
+  const vs=`attribute vec2 a_position;void main(){gl_Position=vec4(a_position,0.0,1.0);}`;
+  const fs=`precision highp float;
+  uniform vec2 u_resolution;uniform mat3 u_rotation;uniform float u_height;uniform float u_time;
+  #define MAX_STEPS 88
+  float sdRoundBox(vec3 p,vec3 b,float r){vec3 q=abs(p)-b+r;return length(max(q,0.0))+min(max(q.x,max(q.y,q.z)),0.0)-r;}
+  float sph(vec3 p,vec3 c,float r){return length(p-c)-r;}
+  float pipField(vec3 p){float d=99.0;float h=.82,o=.085,r=.155,a=.31;
+   if(p.y>.40){d=min(d,sph(p,vec3(-a,h+o,-a),r));d=min(d,sph(p,vec3(a,h+o,-a),r));d=min(d,sph(p,vec3(0.,h+o,0.),r));d=min(d,sph(p,vec3(-a,h+o,a),r));d=min(d,sph(p,vec3(a,h+o,a),r));}
+   if(p.y<-.40){d=min(d,sph(p,vec3(-a,-h-o,-a),r));d=min(d,sph(p,vec3(a,-h-o,a),r));}
+   if(p.z>.40){d=min(d,sph(p,vec3(-a,a,h+o),r));d=min(d,sph(p,vec3(0.,0.,h+o),r));d=min(d,sph(p,vec3(a,-a,h+o),r));}
+   if(p.z<-.40){d=min(d,sph(p,vec3(-a,a,-h-o),r));d=min(d,sph(p,vec3(a,a,-h-o),r));d=min(d,sph(p,vec3(-a,-a,-h-o),r));d=min(d,sph(p,vec3(a,-a,-h-o),r));}
+   if(p.x>.40){d=min(d,sph(p,vec3(h+o,a,-a),r));d=min(d,sph(p,vec3(h+o,0.,-a),r));d=min(d,sph(p,vec3(h+o,-a,-a),r));d=min(d,sph(p,vec3(h+o,a,a),r));d=min(d,sph(p,vec3(h+o,0.,a),r));d=min(d,sph(p,vec3(h+o,-a,a),r));}
+   if(p.x<-.40)d=min(d,sph(p,vec3(-h-o,0.,0.),r));return d;}
+  vec2 scene(vec3 p){vec3 d=p-vec3(0.,u_height,0.);vec3 q=vec3(dot(d,u_rotation[0]),dot(d,u_rotation[1]),dot(d,u_rotation[2]));float body=sdRoundBox(q,vec3(.82),.18),pip=pipField(q);return vec2(max(body,-pip),(-pip>body+.0004)?2.0:1.0);}
+  vec3 normalAt(vec3 p){float e=.0017;vec2 h=vec2(e,0.);return normalize(vec3(scene(p+h.xyy).x-scene(p-h.xyy).x,scene(p+h.yxy).x-scene(p-h.yxy).x,scene(p+h.yyx).x-scene(p-h.yyx).x));}
+  float ao(vec3 p,vec3 n){float o=0.,s=1.;for(int i=1;i<=4;i++){float h=.038*float(i);o+=(h-scene(p+n*h).x)*s;s*=.62;}return clamp(1.-o*2.2,0.,1.);}
+  void main(){vec2 uv=(gl_FragCoord.xy*2.-u_resolution)/u_resolution.y;vec3 ro=vec3(3.0,2.46,4.12);vec3 ta=vec3(0.,u_height*.20,0.);vec3 ww=normalize(ta-ro),uu=normalize(cross(ww,vec3(0.,1.,0.))),vv=cross(uu,ww),rd=normalize(uu*uv.x+vv*uv.y+ww*2.55);
+   float t=0.;vec2 hit=vec2(0.);bool ok=false;for(int i=0;i<MAX_STEPS;i++){hit=scene(ro+rd*t);if(abs(hit.x)<.00125){ok=true;break;}t+=hit.x*.80;if(t>14.)break;}
+   if(!ok){gl_FragColor=vec4(0.);return;}vec3 p=ro+rd*t,n=normalAt(p),v=normalize(ro-p);vec3 l1=normalize(vec3(-3.4,5.2,4.4)-p),l2=normalize(vec3(4.0,1.2,3.2)-p),h1=normalize(l1+v);float d1=max(dot(n,l1),0.),d2=max(dot(n,l2),0.),f=pow(1.-max(dot(n,v),0.),4.),A=ao(p,n);float spec=pow(max(dot(n,h1),0.),hit.y<1.5?82.:132.);vec3 col;
+   if(hit.y<1.5){vec3 base=vec3(1.0,.92,.73);col=base*(.43+.62*d1+.10*d2)*A+vec3(1.0,.91,.68)*spec*1.22+vec3(.28,.16,.06)*f*.22;col+=.012*sin((p.x+p.y+p.z)*92.+u_time*.18);}else{vec3 base=vec3(.012,.010,.009);col=base*(.20+.48*d1+.08*d2)*A+vec3(.72,.61,.43)*spec*.58+vec3(.09,.06,.03)*f*.36;}
+   col=1.-exp(-col*1.45);col=pow(col,vec3(.91));gl_FragColor=vec4(col,1.);}`;
+  const compile=(type,src)=>{const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(sh));return sh};
+  const program=gl.createProgram();gl.attachShader(program,compile(gl.VERTEX_SHADER,vs));gl.attachShader(program,compile(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));this.program=program;gl.useProgram(program);
+  const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);const a=gl.getAttribLocation(program,'a_position');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);this.buffer=buffer;
+  this.u={resolution:gl.getUniformLocation(program,'u_resolution'),rotation:gl.getUniformLocation(program,'u_rotation'),height:gl.getUniformLocation(program,'u_height'),time:gl.getUniformLocation(program,'u_time')};gl.disable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
+ }
+ bindPointer(){if(!this.interactive)return;const c=this.canvas;let moved=false;c.addEventListener('pointerdown',e=>{if(this.rollState)return;moved=false;this.drag={x:e.clientX,y:e.clientY,q:[...this.orientation]};c.setPointerCapture?.(e.pointerId)});c.addEventListener('pointermove',e=>{if(!this.drag||this.rollState)return;const dx=e.clientX-this.drag.x,dy=e.clientY-this.drag.y;if(Math.abs(dx)+Math.abs(dy)>4)moved=true;const yaw=Q.axis([0,1,0],dx*.0105),pitch=Q.axis([1,0,0],dy*.0105);this.orientation=Q.norm(Q.mul(yaw,Q.mul(pitch,this.drag.q)))});const end=()=>{this.drag=null};c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);c._diceWasDragged=()=>moved}
+ resize(){const dpr=Math.min(1.55,window.devicePixelRatio||1),rect=this.canvas.getBoundingClientRect(),w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(this.canvas.width!==w||this.canvas.height!==h){this.canvas.width=w;this.canvas.height=h}this.gl?.viewport(0,0,w,h)}
+ landing(value){const base={5:Q.identity(),2:Q.axis([1,0,0],Math.PI),3:Q.axis([1,0,0],-Math.PI/2),4:Q.axis([1,0,0],Math.PI/2),6:Q.axis([0,0,1],Math.PI/2),1:Q.axis([0,0,1],-Math.PI/2)}[value]||Q.identity();const yaw=Q.axis([0,1,0],-.20+Math.random()*.40);return Q.norm(Q.mul(yaw,base))}
+ roll(value,done){if(this.rollState)return;this.value=value;this.rollState={start:performance.now(),last:performance.now(),duration:1480,target:this.landing(value),settleFrom:null,done};navigator.vibrate?.(18)}
+ frame(now){if(this.destroyed)return;this.resize();const dt=Math.min(.035,(now-this.last)/1000);this.last=now;if(this.rollState){const r=this.rollState,t=Math.min(1,(now-r.start)/r.duration);if(t<.73){const spin=Q.axis([.62+Math.sin(now*.003)*.18,1,.44+Math.cos(now*.002)*.17],dt*(17.-t*7.));this.orientation=Q.norm(Q.mul(spin,this.orientation));this.height=Math.sin(Math.PI*(t/.90))*.54+Math.abs(Math.sin(Math.PI*t*6.))*.055*(1.-t)}else{if(!r.settleFrom)r.settleFrom=[...this.orientation];const s=(t-.73)/.27,e=1-Math.pow(1-s,4);this.orientation=Q.slerp(r.settleFrom,r.target,e);this.height=Math.max(0,Math.sin((1-s)*Math.PI*2.2)*.045*(1-s))}const shadow=this.canvas.closest('.dice-stage')?.querySelector('.dice-shadow');if(shadow){shadow.style.opacity=String(.20+.25*(1-Math.min(1,this.height/.55)));shadow.style.transform=`translateX(-50%) scale(${1-this.height*.42})`}if(t>=1){this.orientation=r.target;this.height=0;this.rollState=null;if(shadow){shadow.style.opacity='';shadow.style.transform=''}navigator.vibrate?.([14,32,24]);r.done?.()}}this.draw(now*.001);this.raf=requestAnimationFrame(this.frame)}
+ draw(time){if(!this.gl){this.drawFallback();return}const gl=this.gl;gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(this.program);let display=this.orientation;if(!this.rollState&&!this.drag)display=Q.mul(Q.axis([0,1,0],Math.sin(time*.55)*.025),display);gl.uniform2f(this.u.resolution,this.canvas.width,this.canvas.height);gl.uniformMatrix3fv(this.u.rotation,false,Q.mat3(display));gl.uniform1f(this.u.height,this.height);gl.uniform1f(this.u.time,time);gl.drawArrays(gl.TRIANGLES,0,3)}
+ drawFallback(){const c=this.ctx2d;if(!c)return;c.clearRect(0,0,this.canvas.width,this.canvas.height);if(this.fallback?.complete){const size=Math.min(this.canvas.width,this.canvas.height);c.drawImage(this.fallback,(this.canvas.width-size)/2,(this.canvas.height-size)/2,size,size)}}
+ destroy(){this.destroyed=true;cancelAnimationFrame(this.raf);if(this.gl){this.gl.deleteBuffer(this.buffer);this.gl.deleteProgram(this.program)}}
+}
+function initDiceCanvases(root=document,interactive=false){root.querySelectorAll('[data-dice-canvas]').forEach(c=>{if(!c._solidDice)c._solidDice=new SolidDiceRenderer(c,{interactive,value:partyState.dieValue})})}
+function destroyDiceCanvases(root=document){root.querySelectorAll?.('[data-dice-canvas]').forEach(c=>{c._solidDice?.destroy();delete c._solidDice})}
+
+const roleCardsMarkup=()=>partyState.players.map((player,index)=>{
+ const assignment=partyState.assignments[index];
+ const role=assignment?.role||roleTypes[index];
+ const person=assignment?.person||'待抽取';
+ return `<div class="role-card ${role.key} ${assignment?'revealed':''}" data-role-index="${index}"><span class="role-icon">${role.icon}</span><span>${role.label}</span><b data-role-person>${person}</b></div>`;
+}).join('');
+const playersMarkup=()=>partyState.players.map(name=>`<button class="player-chip">${name}</button>`).join('')+`${partyState.players.length<4?'<button class="player-chip add" data-add-player aria-label="添加参与者">＋</button>':''}`;
+const currentPartyDish=()=>partyState.dish||partyDishes[0];
+
+const today=()=>`${statusBar()}<div class="screen-scroll"><header class="nav-header"><div><div class="nav-date">6月20日 · 周六</div><div class="nav-title">今天，好好吃饭</div></div><div class="avatar">味</div></header><div class="section-pad"><article class="hero-card" data-open-detail><div class="hero-art">${art('tomato')}<div class="hero-badge">每日一菜</div></div><div class="hero-content"><div class="eyebrow">TODAY'S PICK</div><div class="dish-title">番茄炒蛋</div><div class="dish-reason">酸甜开胃，12 分钟完成。你常选“快手”和“下饭”，今天正合适。</div><div class="meta"><span>12 分钟</span><span>简单</span><span>约 320 kcal</span></div><div class="hero-actions"><button class="primary" data-open-detail>${icon('play')}开始做</button><button class="secondary" data-target="party">${icon('dice')}开一局</button></div></div></article><article class="party-entry" data-target="party"><div class="party-entry-die">⚄</div><div class="party-entry-copy"><b>今晚谁做饭，谁洗碗？</b><span>先掷食谱骰子，再抽签完成厨房分工</span></div><div class="chev">›</div></article><div class="section-title-row"><h2>今晚灵感</h2><button>查看全部</button></div><div class="mini-grid"><article class="mini-card"><div class="mini-art">${art('shrimp')}</div><div class="mini-copy"><b>虾仁西兰花</b><span>16 分钟 · 高蛋白</span></div></article><article class="mini-card"><div class="mini-art">${art('chicken')}</div><div class="mini-copy"><b>香菇滑鸡</b><span>25 分钟 · 清淡</span></div></article></div></div></div>${tabbar('today')}`;
+
+const party=()=>{const dish=currentPartyDish();return `${statusBar()}<div class="screen-scroll party-scroll"><header class="party-header"><div class="small">${icon('users')} TWO DECISIONS, ONE DINNER</div><h1>今晚，开个局</h1><p>先决定吃什么，再把厨房里的活公平分掉。</p></header><main class="party-journey"><section class="game-card dark"><div class="game-head"><div><div class="step-kicker">01 · 食谱骰子</div><h2>把晚餐交给运气</h2><p>一体式六面骰子，相对两面点数之和为 7；每一面对应一道菜。</p></div><div class="game-no">01</div></div><div class="dice-stage" id="diceStage">${diceMarkup()}<div class="dice-shadow"></div><div class="dice-hint" id="diceHint">点击骰子，或摇一摇手机</div></div><div class="dice-result ${partyState.dish?'ready':''}" id="diceResult"><div class="result-thumb" id="diceThumb">${art(dish.kind)}</div><div class="dice-copy"><span>骰子选中</span><b id="diceDishName">${partyState.dish?dish.name:'等待开奖'}</b><small id="diceDishMeta">${partyState.dish?dish.meta:'掷一次就有答案'}</small></div></div><button class="game-action" data-roll-dice>${icon('dice')}<span>${partyState.dish?'再掷一次':'掷出今晚的菜'}</span></button></section><section class="game-card role-card-shell"><div class="game-head"><div><div class="step-kicker">02 · 厨房分工</div><h2>谁掌勺，谁收尾</h2><p>两人抽主厨与洗碗；加入更多人会自动增加角色。</p></div><div class="game-no">02</div></div><div class="player-section"><div class="player-title"><b>今晚参与者</b><span>最多 4 人</span></div><div class="player-row" id="playerRow">${playersMarkup()}</div></div><div class="role-grid" id="roleGrid">${roleCardsMarkup()}</div><div class="role-status" id="roleStatus">${partyState.assignments.length?'分工已锁定，反悔的人请喝饮料。':'点击抽签，结果会被公平打乱。'}</div><button class="role-action" data-assign-roles>${icon('shuffle')}<span>${partyState.assignments.length?'不服，再抽一次':'抽签分工'}</span></button></section><section class="party-finale"><div><b>结果已定，一起开做</b><span id="finaleText">${partyState.dish&&partyState.assignments.length?`${partyState.dish.name} · 分工完成`:'完成上面两步后进入菜谱'}</span></div><button class="${partyState.dish&&partyState.assignments.length?'':'locked'}" data-start-party>${partyState.dish&&partyState.assignments.length?'开始做':'尚未完成'}</button></section><div class="more-game-title">下一步还能这样玩</div><div class="more-game-grid"><article class="more-game"><i>👅</i><b>口味对决</b><span>每个人投一票，找出共同接受的辣度与菜系。</span></article><article class="more-game"><i>⏱️</i><b>火候接力</b><span>每完成一步传手机，计时与提示跟着下一位走。</span></article></div></main></div>${tabbar('party')}`};
+
+const create=()=>`${statusBar()}<div class="screen-scroll"><header class="large-page-title"><div class="small">AI 做饭助手</div><h1>手边有什么？</h1><p>告诉我食材与口味，整理成真正能下锅的菜谱。</p></header><section class="input-card"><div class="input-label">我的食材</div><div class="ingredient-box">例如：番茄、鸡蛋、青椒、豆腐……<div class="input-tools"><button class="tool-btn">${icon('camera')}</button><button class="tool-btn">${icon('mic')}</button></div></div><div class="label-row"><b>口味与场景</b><span>可多选</span></div><div class="chips"><button class="chip selected">20 分钟内</button><button class="chip selected">下饭</button><button class="chip">清淡</button><button class="chip">高蛋白</button><button class="chip">一人食</button><button class="chip">少油</button></div><div class="label-row"><b>料理风格</b><span>智能匹配</span></div><div class="cuisine-scroll"><div class="cuisine-card"><b>家常菜</b><span>熟悉、稳妥、容易复刻</span></div><div class="cuisine-card"><b>川味</b><span>麻辣鲜香，层次分明</span></div><div class="cuisine-card"><b>粤味</b><span>清鲜少油，突出本味</span></div><div class="cuisine-card"><b>日式</b><span>简洁清爽，季节感</span></div></div><button class="generate-button" data-generate>生成 3 道适合我的菜</button><div class="magic-note">只在生成时调用 AI；你的偏好保存在本机</div></section><article class="result-preview"><div class="preview-art">${art('chicken')}</div><div class="preview-copy"><div class="eyebrow">最近生成</div><b>香菇滑鸡</b><span>鸡腿肉 · 香菇 · 姜 ｜ 25 分钟</span></div></article></div>${tabbar('create')}`;
+const detail=()=>`<div class="screen-scroll detail-scroll"><div class="detail-hero">${art('tomato')}<div class="detail-topbar"><button class="round-btn" data-back>${icon('back')}</button><button class="round-btn">${icon('heart')}</button></div></div><section class="detail-sheet"><div class="eyebrow">家常 · 快手</div><div class="dish-title">番茄炒蛋</div><div class="detail-subtitle">酸甜平衡、软嫩多汁。适合工作日晚餐，也适合作为第一道学会的家常菜。</div><div class="stats-row"><div class="stat"><b>12 分钟</b><span>总用时</span></div><div class="stat"><b>简单</b><span>难度</span></div><div class="stat"><b>320 kcal</b><span>每份</span></div></div><section class="section-card"><div class="section-card-head"><b>食材</b><div class="servings"><button>−</button><span>2 人份</span><button>＋</button></div></div><div class="ingredient-list"><div class="ingredient-item"><div class="check-line"><span class="check"></span><span>番茄</span></div><span class="amount">2 个</span></div><div class="ingredient-item"><div class="check-line"><span class="check"></span><span>鸡蛋</span></div><span class="amount">3 个</span></div><div class="ingredient-item"><div class="check-line"><span class="check"></span><span>香葱</span></div><span class="amount">1 根</span></div><div class="ingredient-item"><div class="check-line"><span class="check"></span><span>盐、糖、食用油</span></div><span class="amount">适量</span></div></div></section><button class="cook-button">${icon('timer')}进入烹饪模式</button><section class="section-card"><div class="section-card-head"><b>制作步骤</b><span style="font-size:11px;color:var(--muted)">3 步</span></div><div class="step-row"><div class="step-no">1</div><div class="step-copy">番茄切块；鸡蛋打散，加少许盐和一勺清水。</div></div><div class="step-row"><div class="step-no">2</div><div class="step-copy">热锅下油，鸡蛋炒至刚凝固即盛出，保留嫩度。</div></div><div class="step-row"><div class="step-no">3</div><div class="step-copy">番茄炒出汁，倒回鸡蛋，加入盐和少量糖快速翻匀。</div></div></section><section class="section-card"><div class="collapsed-row" style="border-top:0"><b>营养分析</b><span>健康评分 8.4 ›</span></div><div class="collapsed-row"><b>饮品搭配</b><span>清香乌龙茶 ›</span></div><div class="collapsed-row"><b>烹饪技巧</b><span>3 条建议 ›</span></div></section><button class="complete-recipe-button" data-complete-recipe>${icon('check')}<span>${userGrowth.completedDemo?'已完成 · 已计入成长':'完成这道菜'}</span></button><p class="completion-note">完成后计入主线称号，并检查隐藏称号条件</p></section></div>`;
+const tile=(name,meta,kind)=>`<article class="recipe-tile"><div class="tile-art">${art(kind)}<div class="heart-dot">♥</div></div><div class="tile-copy"><b>${name}</b><span>${meta}</span></div></article>`;
+const library=()=>`${statusBar()}<div class="screen-scroll"><header class="nav-header" style="padding-bottom:14px"><div><div class="nav-date">个人收藏</div><div class="nav-title">我的菜谱</div></div><button class="round-btn">${icon('grid')}</button></header><div class="segment"><button class="active">收藏</button><button>做过</button><button>菜单</button></div><div class="library-grid">${tile('香菇滑鸡','25 分钟 · 清淡','chicken')}${tile('虾仁西兰花','16 分钟 · 高蛋白','shrimp')}${tile('麻婆豆腐','20 分钟 · 下饭','tofu')}${tile('土豆炖牛肉','55 分钟 · 硬菜','beef')}</div><div class="tools-title">更多工具</div><div class="tool-list"><div class="tool-row"><div class="tool-left"><div class="tool-icon">${icon('pot')}</div><div class="tool-copy"><b>一桌好菜</b><span>按人数与场景生成完整菜单</span></div></div><div class="chev">›</div></div><div class="tool-row"><div class="tool-left"><div class="tool-icon">${icon('spoon')}</div><div class="tool-copy"><b>酱料助手</b><span>根据口味定制酱汁配方</span></div></div><div class="chev">›</div></div><div class="tool-row"><div class="tool-left"><div class="tool-icon">${icon('moon')}</div><div class="tool-copy"><b>玄学厨房</b><span>保留为轻量彩蛋，不占主导航</span></div></div><div class="chev">›</div></div></div></div>${tabbar('library')}`;
+const profile=()=>{const cur=currentMainTitle(),next=nextMainTitle(),display=hiddenTitles[userGrowth.displayHidden];const remain=next?next.count-userGrowth.recipeCount:0;return `${statusBar()}<div class="screen-scroll"><header class="nav-header"><div><div class="nav-date">成长与偏好</div><div class="nav-title">我的</div></div><div class="avatar">味</div></header><section class="growth-hero"><div class="growth-top"><div class="growth-avatar">味</div><div class="growth-copy"><div class="growth-name">当前等级称号</div><div class="growth-title"><small class="title-quality q-${cur.q}">${cur.quality}</small>${cur.title}</div><div class="growth-badge">✦ 展示称号 · ${display?.title||'未装备'}</div></div></div><div class="growth-progress"><div class="growth-progress-head"><b>${next?`距离 ${next.title} 还差 ${remain} 道`:'已抵达最高称号'}</b><span>${next?`${userGrowth.recipeCount} / ${next.count}`:'5000 / 5000'}</span></div><div class="progress-track"><div class="progress-fill" style="width:${mainProgress()}%"></div></div></div><div class="growth-stats"><div class="growth-stat"><b>${userGrowth.recipeCount}</b><span>完成菜谱</span></div><div class="growth-stat"><b>${userGrowth.streakDays}</b><span>连续天数</span></div><div class="growth-stat"><b>${userGrowth.hiddenUnlocked.size}</b><span>隐藏称号</span></div></div></section><article class="title-entry" data-target="titles"><div class="title-entry-icon">${icon('trophy')}</div><div class="title-entry-copy"><b>进入称号殿堂</b><span>查看主线等级、隐藏线索与品质收藏</span></div><div class="chev">›</div></article><div class="profile-section-title"><b>最近荣誉</b><span>${userGrowth.hiddenUnlocked.size} 个已解锁</span></div><div class="recent-achievements"><article class="recent-achievement"><div class="medal">🔥</div><b>烟火初燃</b><span>连续做饭 3 天，已解锁</span></article><article class="recent-achievement"><div class="medal">${userGrowth.hiddenUnlocked.has('hidden_random_001')?'⚄':'?'}</div><b>${userGrowth.hiddenUnlocked.has('hidden_random_001')?'命运开锅':'隐藏称号'}</b><span>${userGrowth.hiddenUnlocked.has('hidden_random_001')?'第一次骰子选菜':'线索：把菜单交给运气'}</span></article></div><div class="settings-list"><div class="setting-row"><b>饮食偏好</b><span>清淡、少油 ›</span></div><div class="setting-row"><b>忌口与过敏</b><span>未设置 ›</span></div><div class="setting-row"><b>每日推荐时间</b><span>17:30 ›</span></div><div class="setting-row"><b>营养目标</b><span>均衡饮食 ›</span></div></div><div class="settings-list"><div class="setting-row"><b>数据与隐私</b><span>›</span></div><div class="setting-row"><b>高级设置</b><span>AI 服务配置 ›</span></div><div class="setting-row"><b>关于美味助手</b><span>1.0.0 ›</span></div></div></div>${tabbar('profile')}`};
+const mainTitleCard=(t)=>{const cur=t===currentMainTitle(),locked=userGrowth.recipeCount<t.count;return `<article class="mainline-card ${cur?'current':''} ${locked?'locked':''}">${cur?'<div class="current-flag">当前</div>':''}<div class="mainline-medal title-quality q-${t.q}">✦</div><div class="mainline-copy"><span>${t.quality}品质 · ${t.count} 道菜</span><b>${t.title}</b></div><div class="mainline-count">${locked?`还差 ${t.count-userGrowth.recipeCount}`:'已达成'}</div></article>`};
+const hiddenTitleCard=(id)=>{const item=hiddenTitles[id],unlocked=userGrowth.hiddenUnlocked.has(id),equipped=userGrowth.displayHidden===id;return `<article class="hidden-title-card ${unlocked?'unlocked':'locked'} ${equipped?'equipped':''}" ${unlocked?`data-equip-hidden="${id}"`:''}>${equipped?'<span class="equip-note">展示中</span>':''}<div class="hidden-icon">${unlocked?item.icon:'?'}</div><b>${unlocked?item.title:'隐藏称号：？？？'}</b><span>${unlocked?`${item.category} · 点击展示`:item.hint}</span></article>`};
+const titles=()=>{const cur=currentMainTitle(),next=nextMainTitle(),display=hiddenTitles[userGrowth.displayHidden];return `${statusBar()}<div class="screen-scroll title-scroll"><header class="title-hall-header"><button class="round-btn" data-target="profile">${icon('back')}</button><div><h1>称号殿堂</h1><p>主线记录持续成长，隐藏称号记录那些意外而特别的瞬间。</p></div></header><section class="equipped-title-card"><div class="equipped-label">CURRENT KITCHEN IDENTITY</div><div class="equipped-main"><span class="title-quality q-${cur.q}">${cur.quality}</span> · ${cur.title}</div><div class="equipped-hidden">✦ 展示称号 · ${display?.title||'未装备'}</div><div class="hall-progress"><div class="hall-progress-row"><b>${userGrowth.recipeCount} 道菜</b><span>${next?`下一称号 ${next.title}`:'最高等级'}</span></div><div class="progress-track"><div class="progress-fill" style="width:${mainProgress()}%"></div></div></div></section><div class="quality-legend"><div class="quality-pill q-common"><i></i>普通</div><div class="quality-pill q-fine"><i></i>精良</div><div class="quality-pill q-rare"><i></i>稀有</div><div class="quality-pill q-epic"><i></i>史诗</div><div class="quality-pill q-legendary"><i></i>传说</div><div class="quality-pill q-mythic"><i></i>神话</div><div class="quality-pill q-supreme"><i></i>至尊</div></div><section class="hall-section"><div class="hall-section-head"><b>主线称号</b><span>${userGrowth.recipeCount} / 5000 道</span></div><div class="mainline-list">${visibleMainTitles().map(mainTitleCard).join('')}</div></section><section class="hall-section" style="padding-bottom:28px"><div class="hall-section-head"><b>隐藏称号</b><span>${userGrowth.hiddenUnlocked.size} / 74</span></div><div class="hidden-grid">${hiddenTitleCard('hidden_streak_001')}${hiddenTitleCard('hidden_random_001')}${hiddenTitleCard('hidden_late_night_001')}${hiddenTitleCard('hidden_retry_001')}${hiddenTitleCard('hidden_random_003')}${hiddenTitleCard('hidden_explore_001')}</div></section></div>${tabbar('profile')}`};
+const screens={today,party,create,detail,library,profile,titles};
+let current='today';
+function render(name){current=name;const host=document.getElementById('interactivePhone');destroyDiceCanvases(host);host.innerHTML=`<section class="app-screen">${screens[name]()}</section>`;bind();document.querySelectorAll('.toolbar [data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));}
+function bind(){
+ document.querySelectorAll('[data-target]').forEach(b=>b.onclick=(e)=>{e.stopPropagation();render(b.dataset.target)});
+ document.querySelectorAll('[data-open-detail]').forEach(b=>b.onclick=()=>render('detail'));
+ document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>render('today'));
+ document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>b.classList.toggle('selected'));
+ document.querySelectorAll('[data-generate]').forEach(b=>b.onclick=()=>{b.textContent='正在整理你的菜谱…';setTimeout(()=>{b.textContent='已生成 3 道菜';},650)});
+ document.querySelectorAll('[data-swap]').forEach(b=>b.onclick=(e)=>{e.stopPropagation();const title=document.querySelector('.hero-card .dish-title');if(title){title.textContent=title.textContent==='番茄炒蛋'?'香菇滑鸡':'番茄炒蛋';}});
+ initDiceCanvases(document.getElementById('interactivePhone'),true);
+ const die=document.querySelector('#interactivePhone [data-dice-canvas]');
+ if(die){die.addEventListener('click',rollDice)}
+ document.querySelectorAll('[data-roll-dice]').forEach(b=>b.onclick=rollDice);
+ document.querySelectorAll('[data-assign-roles]').forEach(b=>b.onclick=assignRoles);
+ document.querySelectorAll('[data-add-player]').forEach(b=>b.onclick=addPlayer);
+ document.querySelectorAll('[data-start-party]').forEach(b=>b.onclick=()=>{if(partyState.dish&&partyState.assignments.length) render('detail')});
+ document.querySelectorAll('[data-complete-recipe]').forEach(b=>b.onclick=()=>completeRecipe(b));
+ document.querySelectorAll('[data-equip-hidden]').forEach(b=>b.onclick=()=>equipHiddenTitle(b.dataset.equipHidden));
+}
+function rollDice(){
+ const die=document.querySelector('#interactivePhone [data-dice-canvas]');const stage=document.getElementById('diceStage');const button=document.querySelector('[data-roll-dice]');
+ if(!die||!button||button.disabled)return;
+ button.disabled=true;button.querySelector('span').textContent='骰子滚动中…';stage?.classList.add('rolling');
+ const value=1+Math.floor(Math.random()*6);partyState.dieValue=value;partyState.dish=partyDishes[value-1];
+ navigator.vibrate?.(25);
+ const finish=()=>{
+  const dish=partyState.dish;document.getElementById('diceDishName').textContent=dish.name;document.getElementById('diceDishMeta').textContent=dish.meta;document.getElementById('diceThumb').innerHTML=art(dish.kind);document.getElementById('diceResult').classList.add('ready');document.getElementById('diceHint').textContent=`点数 ${value} · ${dish.name}`;button.disabled=false;button.querySelector('span').textContent='再掷一次';stage?.classList.remove('rolling');updateFinale();navigator.vibrate?.([18,35,28]);if(!userGrowth.hiddenUnlocked.has('hidden_random_001'))unlockHiddenTitle('hidden_random_001');
+ };
+ if(die._solidDice){die._solidDice.roll(value,finish)}else{setTimeout(finish,1300)}
+}
+function addPlayer(){
+ const names=['小李','小陈'];if(partyState.players.length>=4)return;partyState.players.push(names[partyState.players.length-2]||`朋友${partyState.players.length}`);partyState.assignments=[];
+ const row=document.getElementById('playerRow');const grid=document.getElementById('roleGrid');if(row)row.innerHTML=playersMarkup();if(grid)grid.innerHTML=roleCardsMarkup();document.getElementById('roleStatus').textContent='参与者已更新，请重新抽签。';bind();updateFinale();
+}
+function assignRoles(){
+ const grid=document.getElementById('roleGrid');const button=document.querySelector('[data-assign-roles]');if(!grid||!button)return;
+ button.disabled=true;button.querySelector('span').textContent='正在洗牌…';grid.classList.add('shuffling');
+ const shuffled=[...partyState.players].sort(()=>Math.random()-.5);let tick=0;const flash=setInterval(()=>{grid.querySelectorAll('[data-role-person]').forEach((el,i)=>el.textContent=partyState.players[(i+tick)%partyState.players.length]);tick++;},90);
+ setTimeout(()=>{clearInterval(flash);partyState.assignments=shuffled.map((person,index)=>({person,role:roleTypes[index]}));grid.classList.remove('shuffling');grid.innerHTML=roleCardsMarkup();document.getElementById('roleStatus').textContent='分工已锁定，反悔的人请喝饮料。';button.disabled=false;button.querySelector('span').textContent='不服，再抽一次';updateFinale();navigator.vibrate?.([20,35,24]);},850);
+}
+function equipHiddenTitle(id){
+ if(!userGrowth.hiddenUnlocked.has(id))return;userGrowth.displayHidden=id;render('titles');
+}
+function unlockHiddenTitle(id){
+ const item=hiddenTitles[id];if(!item||userGrowth.hiddenUnlocked.has(id))return;userGrowth.hiddenUnlocked.add(id);showUnlockModal({kind:'hidden',title:item.title,kicker:'隐藏称号解锁',description:item.description,next:'已加入称号殿堂，可在「我的」中选择展示。'});
+}
+function completeRecipe(button){
+ if(userGrowth.completedDemo)return;const before=currentMainTitle();userGrowth.recipeCount+=1;userGrowth.completedDemo=true;const after=currentMainTitle();button.disabled=true;button.querySelector('span').textContent='已完成 · 已计入成长';navigator.vibrate?.([18,28,35]);
+ if(before.title!==after.title){const next=nextMainTitle();showUnlockModal({kind:'main',quality:after.quality,q:after.q,title:after.title,kicker:'称号升级',description:`恭喜你完成第 ${userGrowth.recipeCount} 道菜，晋升为 ${after.quality}品质称号。`,next:next?`再完成 ${next.count-userGrowth.recipeCount} 道菜，即可解锁：${next.quality} · ${next.title}`:'你已经抵达主线最高称号。',target:'titles'});}else{showUnlockModal({kind:'complete',title:'料理完成',kicker:'已记录这一餐',description:`第 ${userGrowth.recipeCount} 道菜已计入成长。`,next:nextMainTitle()?`距离 ${nextMainTitle().title} 还差 ${nextMainTitle().count-userGrowth.recipeCount} 道菜。`:''});}
+}
+function showUnlockModal(payload){
+ document.querySelector('.unlock-overlay')?.remove();const overlay=document.createElement('div');overlay.className='unlock-overlay';const symbol=payload.kind==='main'?'♛':payload.kind==='hidden'?'✦':'✓';overlay.innerHTML=`<div class="unlock-modal"><span class="unlock-spark s1">✦</span><span class="unlock-spark s2">✧</span><span class="unlock-spark s3">✦</span><div class="unlock-symbol">${symbol}</div><div class="unlock-kicker">${payload.kicker}</div><h2>${payload.quality?`<span class="title-quality q-${payload.q}">${payload.quality}</span> · `:''}${payload.title}</h2><p>${payload.description}</p>${payload.next?`<div class="unlock-next">${payload.next}</div>`:''}<div class="unlock-actions"><button class="unlock-secondary" data-close-unlock>继续</button><button class="unlock-primary" data-unlock-primary>${payload.target?'查看称号':'收下称号'}</button></div></div>`;document.body.appendChild(overlay);const close=()=>overlay.remove();overlay.querySelector('[data-close-unlock]').onclick=close;overlay.querySelector('[data-unlock-primary]').onclick=()=>{close();if(payload.target)render(payload.target)};overlay.onclick=e=>{if(e.target===overlay)close()};
+}
+function updateFinale(){
+ const ready=partyState.dish&&partyState.assignments.length;const text=document.getElementById('finaleText');const button=document.querySelector('[data-start-party]');if(text)text.textContent=ready?`${partyState.dish.name} · 分工完成`:'完成上面两步后进入菜谱';if(button){button.textContent=ready?'开始做':'尚未完成';button.classList.toggle('locked',!ready)}
+}
+document.querySelectorAll('.toolbar [data-screen]').forEach(b=>b.onclick=()=>render(b.dataset.screen));
+document.getElementById('boardButton').onclick=()=>{document.body.classList.add('board-mode');window.scrollTo(0,0)};
+function renderBoard(){const grid=document.getElementById('boardGrid');const defs=[['today','01 · 每日推荐','今日'],['party','02 · 饭局游戏','实体骰子与分工'],['detail','03 · 完成菜谱','计入成长'],['profile','04 · 我的成长','等级进度'],['titles','05 · 称号殿堂','主线与隐藏'],['library','06 · 菜谱库','收藏与工具']];grid.innerHTML=defs.map(([key,label,sub])=>`<div class="board-item"><div class="label">${label}<span>${sub}</span></div><div class="phone"><div class="phone-screen"><section class="app-screen">${screens[key]()}</section></div></div></div>`).join('');initDiceCanvases(grid,false);}
+const params=new URLSearchParams(location.search);
+if(params.get('demo')==='done'){
+ partyState.dish=partyDishes[3];partyState.dieValue=4;partyState.assignments=[{person:'小王',role:roleTypes[0]},{person:'我',role:roleTypes[1]}];
+}
+renderBoard();
+if(params.has('board')){document.body.classList.add('board-mode');}
+render(params.get('screen')&&screens[params.get('screen')]?params.get('screen'):'today');
+</script>
+</body>
+</html>

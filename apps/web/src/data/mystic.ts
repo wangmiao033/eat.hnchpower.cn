@@ -1,0 +1,71 @@
+export type MysticModeId = 'daily' | 'mood' | 'tarot' | 'number' | 'couple' | 'sticks'
+export type MoodId = '开心' | '疲惫' | '焦虑' | '想家' | '兴奋' | '平静'
+
+export interface MysticModeConfig {
+    id: MysticModeId
+    name: string
+    subtitle: string
+    icon: string
+    description: string
+}
+
+export interface MoodConfig {
+    id: MoodId
+    emoji: string
+    flavor: string
+    burden: 'low' | 'medium' | 'high'
+    recipeBias: string[]
+}
+
+export interface TarotCard {
+    id: string
+    name: string
+    symbol: string
+    meaning: string
+    recipeBias: string[]
+}
+
+export interface FlavorStick {
+    id: string
+    name: string
+    symbol: string
+    blessing: string
+    recipeBias: string[]
+}
+
+export const mysticModes: MysticModeConfig[] = [
+    { id: 'daily', name: '今日食运', subtitle: '日期 × 星座 × 生肖', icon: '✦', description: '按今天的时间气质生成幸运味型和幸运菜。' },
+    { id: 'mood', name: '心情开锅', subtitle: '情绪 × 操作负担', icon: '♡', description: '根据开心、疲惫、焦虑、想家、兴奋、平静推荐今晚负担合适的菜。' },
+    { id: 'tarot', name: '塔罗菜牌', subtitle: '抽牌 × 料理原型', icon: '☾', description: '抽一张料理牌，把牌意落到真实能做的菜。' },
+    { id: 'number', name: '幸运数字', subtitle: '1-99 稳定映射', icon: '88', description: '输入一个数字，映射今晚的菜系、味型和菜谱。' },
+    { id: 'couple', name: '缘分合锅', subtitle: '双人 × 合拍', icon: '∞', description: '两个人一起吃饭时，找出口味交集和分工建议。' },
+    { id: 'sticks', name: '五味灵签', subtitle: '酸甜苦辣咸鲜', icon: '签', description: '随机抽一支味觉灵签，让今晚的味道先定下来。' }
+]
+
+export const moodConfigs: MoodConfig[] = [
+    { id: '开心', emoji: '😄', flavor: '鲜香明亮', burden: 'medium', recipeBias: ['shrimp-broccoli', 'teriyaki-chicken-rice', 'tomato-egg'] },
+    { id: '疲惫', emoji: '😮‍💨', flavor: '暖胃省力', burden: 'low', recipeBias: ['tomato-egg', 'winter-melon-soup', 'mushroom-chicken'] },
+    { id: '焦虑', emoji: '😵‍💫', flavor: '酸辣开胃', burden: 'low', recipeBias: ['sour-spicy-potato', 'mapo-tofu', 'thai-basil-pork'] },
+    { id: '想家', emoji: '🏠', flavor: '家常安定', burden: 'medium', recipeBias: ['mushroom-chicken', 'potato-beef', 'braised-eggplant'] },
+    { id: '兴奋', emoji: '🔥', flavor: '浓郁热闹', burden: 'high', recipeBias: ['potato-beef', 'thai-basil-pork', 'mapo-tofu'] },
+    { id: '平静', emoji: '🍵', flavor: '清淡舒展', burden: 'low', recipeBias: ['shrimp-broccoli', 'winter-melon-soup', 'teriyaki-chicken-rice'] }
+]
+
+export const tarotCards: TarotCard[] = [
+    { id: 'sun-pot', name: '太阳锅', symbol: '☀', meaning: '适合明亮、直接、容易成功的料理。', recipeBias: ['tomato-egg', 'shrimp-broccoli'] },
+    { id: 'moon-soup', name: '月亮汤', symbol: '☾', meaning: '适合温柔、暖胃、让心安静下来的料理。', recipeBias: ['winter-melon-soup', 'mushroom-chicken'] },
+    { id: 'tower-wok', name: '高塔炒锅', symbol: '♜', meaning: '适合用热辣香气打破低气压。', recipeBias: ['mapo-tofu', 'thai-basil-pork'] },
+    { id: 'lover-table', name: '恋人餐桌', symbol: '♡', meaning: '适合共享、分工和有仪式感的一餐。', recipeBias: ['potato-beef', 'teriyaki-chicken-rice'] },
+    { id: 'hermit-rice', name: '隐者米饭', symbol: '♧', meaning: '适合一个人慢慢吃完的完整饭。', recipeBias: ['teriyaki-chicken-rice', 'braised-eggplant'] }
+]
+
+export const flavorSticks: FlavorStick[] = [
+    { id: 'sour', name: '酸签', symbol: '酸', blessing: '酸味开路，先把胃口叫醒。', recipeBias: ['sour-spicy-potato', 'tomato-egg'] },
+    { id: 'sweet', name: '甜签', symbol: '甜', blessing: '一点甜咸，给今天收个柔软的尾。', recipeBias: ['teriyaki-chicken-rice', 'braised-eggplant'] },
+    { id: 'bitter', name: '苦签', symbol: '苦', blessing: '清淡一点，给身体留出余地。', recipeBias: ['winter-melon-soup', 'shrimp-broccoli'] },
+    { id: 'spicy', name: '辣签', symbol: '辣', blessing: '辣味破局，今晚别再犹豫。', recipeBias: ['mapo-tofu', 'thai-basil-pork'] },
+    { id: 'salty', name: '咸鲜签', symbol: '鲜', blessing: '咸鲜稳住底盘，米饭会感谢你。', recipeBias: ['mushroom-chicken', 'potato-beef'] }
+]
+
+export const zodiacSigns = ['白羊', '金牛', '双子', '巨蟹', '狮子', '处女', '天秤', '天蝎', '射手', '摩羯', '水瓶', '双鱼']
+export const animalSigns = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪']

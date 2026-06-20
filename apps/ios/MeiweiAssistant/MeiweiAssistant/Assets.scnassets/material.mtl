@@ -1,0 +1,16 @@
+# 美味助手 True D6 materials
+newmtl GlossBlackPips
+Ka 0.010 0.009 0.008
+Kd 0.043 0.039 0.035
+Ks 0.88 0.80 0.67
+Ns 760.0
+d 1.0
+illum 2
+
+newmtl IvoryBody
+Ka 0.18 0.16 0.12
+Kd 0.949 0.878 0.710
+Ks 0.95 0.87 0.70
+Ns 420.0
+d 1.0
+illum 2

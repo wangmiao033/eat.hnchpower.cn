@@ -32,6 +32,14 @@
   - Signing Identity：`Apple Development: 云 上征途 (37A3W2NV9Z)`
   - Provisioning Profile：`iOS Team Provisioning Profile: *`
   - 说明：该 archive 可验证 Release 打包和本机安装，但不是 TestFlight 分发签名产物。
+- App Store Connect 导出预检通过：
+  - `xcodebuild -exportArchive -archivePath /tmp/MeiweiAssistant-release-signed.xcarchive -exportPath /tmp/MeiweiAssistant-export -exportOptionsPlist /tmp/meiwei-export-options.plist -allowProvisioningUpdates`
+  - 导出 IPA：`/tmp/MeiweiAssistant-export/MeiweiAssistant.ipa`
+  - Distribution：`Cloud Managed Apple Distribution`
+  - Provisioning Profile：`iOS Team Store Provisioning Profile: cn.hnchpower.eat`
+  - Entitlements：`beta-reports-active = true`，`get-task-allow = false`
+  - Version：`1.0.0`
+  - Build：`1`
 - iPhone 17 Simulator 构建通过。
 - App 可安装到模拟器。
 - App 可启动到前台，未再出现共享 JSON 解码崩溃。
@@ -69,6 +77,14 @@
   - `titles.json`
   - `mystic.json`
   - `party-games.json`
+- 导出 IPA 已确认包含关键 bundle 资源：
+  - `Payload/MeiweiAssistant.app/Assets.car`
+  - `Payload/MeiweiAssistant.app/LaunchScreen.storyboardc`
+  - `Payload/MeiweiAssistant.app/Assets.scnassets/TrueD6.obj`
+  - `Payload/MeiweiAssistant.app/recipes.json`
+  - `Payload/MeiweiAssistant.app/titles.json`
+  - `Payload/MeiweiAssistant.app/mystic.json`
+  - `Payload/MeiweiAssistant.app/party-games.json`
 - AppIcon 已由现有图标素材生成 iPhone 和 App Store 尺寸。
 - 启动页已配置为暖白背景、中间图标、标题和副标题。
 - iOS 源码未使用 `WKWebView` 或 Capacitor。
@@ -82,11 +98,11 @@
 ## 未通过项
 
 - 真机截图未生成；当前 Xcode 26.5 的 `devicectl` 没有通用 screenshot 子命令，本机也未安装 `idevicescreenshot` / `ios-deploy`。
-- App Store Connect 导出预检未通过：
-  - `xcodebuild -exportArchive -archivePath /tmp/MeiweiAssistant-release-signed.xcarchive -exportPath /tmp/MeiweiAssistant-export -exportOptionsPlist /tmp/meiwei-export-options.plist -allowProvisioningUpdates`
+- App Store Connect 导出登录前失败过一次：
   - 失败原因：`exportArchive No Accounts`
   - 失败原因：`exportArchive No profiles for 'cn.hnchpower.eat' were found`
-- 未执行 TestFlight upload；需 App Store Connect App 记录、Apple Distribution 证书、`cn.hnchpower.eat` 分发 profile 和上传权限。
+  - Xcode Accounts 登录后已通过导出预检。
+- 未执行 TestFlight upload；需要在 Xcode Organizer 中继续上传并完成 App Store Connect 处理。
 - 未做完整人工交互回归；本轮完成了模拟器启动、首页截图、真机安装、真机启动、Release archive 重装和构建级资源验证。
 
 ## 已知 Warning
@@ -96,13 +112,13 @@
 
 ## TestFlight 上传前检查项
 
-- 在 Xcode Settings > Accounts 登录 Apple Developer 账号。
+- 在 Xcode Settings > Accounts 登录 Apple Developer 账号。已完成。
 - 在 Signing & Capabilities 选择可用于 `cn.hnchpower.eat` 的 Team；当前本机 Debug 验证可用 Team 为 `XU97BSCFY6`。
 - 保持 `Automatically manage signing`。
 - 确认 App Store Connect 已创建 Bundle ID 为 `cn.hnchpower.eat` 的 App。
-- 确认本机 Xcode Accounts 对命令行 archive/export 可见；当前命令行导出提示 `No Accounts`。
-- 确认 Apple Developer Portal 中存在 `cn.hnchpower.eat` 的 explicit App ID 和 App Store distribution profile；当前导出提示未找到该 Bundle ID 的 profile。
-- 确认钥匙串中有 Apple Distribution 证书；当前本机仅检测到 Apple Development 证书。
+- 确认本机 Xcode Accounts 对命令行 archive/export 可见。已完成，`xcodebuild -exportArchive` 通过。
+- 确认 Apple Developer Portal 中存在 `cn.hnchpower.eat` 的 explicit App ID 和 App Store distribution profile。已由导出结果确认。
+- 确认分发签名。已使用 `Cloud Managed Apple Distribution` 导出。
 - 首次上传可继续使用 Build `1`；如果已经上传过同版本同 Build，再递增到 Build `2`。
 - 使用 Release / Any iOS Device 执行 Archive。
 - Organizer 中验证 archive 后上传到 App Store Connect。
@@ -118,8 +134,6 @@
 
 ## 下一阶段计划
 
-- 在 Xcode 中登录 Apple Developer 账号，并确认命令行 `xcodebuild -exportArchive` 可访问账号。
-- 在 Apple Developer Portal / App Store Connect 创建或确认 `cn.hnchpower.eat`，生成分发签名所需资源。
-- 使用 Xcode Organizer 重新 Archive，并上传 TestFlight。
+- 使用 Xcode Organizer 上传 TestFlight。
 - 上传前人工复测今日推荐、骰子、分工、玄学、烹饪流程、称号弹窗和本地状态恢复。
 - 补齐正式截图：今日、饭局 3D 骰子、玄学结果、菜谱详情、称号殿堂。

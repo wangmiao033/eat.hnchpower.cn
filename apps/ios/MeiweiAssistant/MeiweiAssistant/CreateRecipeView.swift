@@ -13,6 +13,8 @@ struct CreateRecipeView: View {
     @State private var selectedPreferences: Set<String> = ["20 分钟内", "下饭"]
     @State private var isGenerating = false
     @State private var generated: [Recipe] = []
+    @State private var generationMessage = ""
+    @State private var generationMode: AIRecipeMode?
 
     var body: some View {
         ScrollView {
@@ -94,12 +96,20 @@ struct CreateRecipeView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isGenerating)
+                    .disabled(isGenerating || ingredients.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
-                    Text("只在生成时调用 AI；偏好建议保存在本机。")
-                        .font(.caption2)
-                        .foregroundStyle(AppTheme.secondary)
-                        .frame(maxWidth: .infinity)
+                    VStack(spacing: 6) {
+                        Text("配置免费 Gemini API Key 后调用 AI；未配置时使用本地生成兜底。")
+                            .font(.caption2)
+                            .foregroundStyle(AppTheme.secondary)
+                        if !generationMessage.isEmpty {
+                            Label(generationMessage, systemImage: generationMode == .gemini ? "sparkles" : "wand.and.stars")
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(generationMode == .gemini ? AppTheme.accent : AppTheme.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
                 }
                 .padding(18)
                 .meiweiCard()
@@ -146,10 +156,17 @@ struct CreateRecipeView: View {
 
     private func generate() {
         isGenerating = true
+        generationMessage = ""
+        generationMode = nil
         Task {
-            try? await Task.sleep(for: .milliseconds(650))
+            let result = await AIRecipeService.shared.generateRecipes(
+                ingredients: ingredients,
+                preferences: Array(selectedPreferences).sorted()
+            )
             await MainActor.run {
-                generated = Array(SampleData.recipes.prefix(3))
+                generated = result.recipes
+                generationMode = result.mode
+                generationMessage = result.message
                 isGenerating = false
             }
         }

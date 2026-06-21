@@ -72,7 +72,12 @@ struct ProfileView: View {
                 VStack(spacing: 0) {
                     setting("数据与隐私", value: "")
                     Divider().opacity(0.5)
-                    setting("高级设置", value: "AI 服务配置")
+                    NavigationLink {
+                        AISettingsView()
+                    } label: {
+                        setting("高级设置", value: "AI 服务配置")
+                    }
+                    .buttonStyle(.plain)
                     Divider().opacity(0.5)
                     setting("关于美味助手", value: "1.0.0")
                 }

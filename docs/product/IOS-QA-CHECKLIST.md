@@ -9,7 +9,7 @@
 - 模拟器 ID：B22D77F4-C6DD-4EEC-9467-75363A39C3FD
 - 模拟器 iOS：26.5
 - 真机：iPhone 17 Pro，iOS 26.5.1
-- 真机状态：`devicectl` 显示 `available (paired)`，已完成 Debug 安装和启动验证
+- 真机状态：`devicectl` 显示 `connected`，已完成 Debug 安装验证和 Release archive 产物重装启动验证
 - 工程：`apps/ios/MeiweiAssistant/MeiweiAssistant.xcodeproj`
 - Scheme：`MeiweiAssistant`
 - Bundle Identifier：`cn.hnchpower.eat`
@@ -17,7 +17,7 @@
 - Version：`1.0.0`
 - Build：`1`
 - Signing：`CODE_SIGN_STYLE = Automatic`
-- Team：不写入仓库；本机临时使用 `XU97BSCFY6` 完成 Debug 签名验证
+- Team：不写入仓库；本机临时使用 `XU97BSCFY6` 完成 Debug/Release 本地签名验证
 
 ## 已通过项
 
@@ -26,6 +26,12 @@
   - `xcodebuild -project apps/ios/MeiweiAssistant/MeiweiAssistant.xcodeproj -scheme MeiweiAssistant -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build`
 - Archive 前置归档通过：
   - `xcodebuild -project apps/ios/MeiweiAssistant/MeiweiAssistant.xcodeproj -scheme MeiweiAssistant -configuration Release -destination 'generic/platform=iOS' -archivePath /tmp/MeiweiAssistant.xcarchive CODE_SIGNING_ALLOWED=NO archive`
+- Release Archive 本机签名归档通过：
+  - `xcodebuild -project apps/ios/MeiweiAssistant/MeiweiAssistant.xcodeproj -scheme MeiweiAssistant -configuration Release -destination 'generic/platform=iOS' -archivePath /tmp/MeiweiAssistant-release-signed.xcarchive DEVELOPMENT_TEAM=XU97BSCFY6 -allowProvisioningUpdates archive`
+  - Archive Bundle ID：`cn.hnchpower.eat`
+  - Signing Identity：`Apple Development: 云 上征途 (37A3W2NV9Z)`
+  - Provisioning Profile：`iOS Team Provisioning Profile: *`
+  - 说明：该 archive 可验证 Release 打包和本机安装，但不是 TestFlight 分发签名产物。
 - iPhone 17 Simulator 构建通过。
 - App 可安装到模拟器。
 - App 可启动到前台，未再出现共享 JSON 解码崩溃。
@@ -35,6 +41,12 @@
   - `bundleID = cn.hnchpower.eat`
 - iPhone 17 Pro 真机启动通过，进程列表可见：
   - `/private/var/containers/Bundle/Application/.../MeiweiAssistant.app/MeiweiAssistant`
+- iPhone 17 Pro 真机全新安装 Release archive 产物通过：
+  - 先卸载旧 App：`xcrun devicectl device uninstall app --device 5B779D9A-A4E4-53D6-98AA-E2647E8D4306 cn.hnchpower.eat`
+  - 安装 archive app：`xcrun devicectl device install app --device 5B779D9A-A4E4-53D6-98AA-E2647E8D4306 /tmp/MeiweiAssistant-release-signed.xcarchive/Products/Applications/MeiweiAssistant.app`
+  - 启动：`xcrun devicectl device process launch --device 5B779D9A-A4E4-53D6-98AA-E2647E8D4306 cn.hnchpower.eat`
+  - 设备安装信息：`美味助手 / cn.hnchpower.eat / 1.0.0 / 1`
+  - 进程列表可见：`/private/var/containers/Bundle/Application/.../MeiweiAssistant.app/MeiweiAssistant`
 - 真机构建产物已确认包含关键 bundle 资源：
   - `Assets.car`
   - `LaunchScreen.storyboardc`
@@ -70,8 +82,12 @@
 ## 未通过项
 
 - 真机截图未生成；当前 Xcode 26.5 的 `devicectl` 没有通用 screenshot 子命令，本机也未安装 `idevicescreenshot` / `ios-deploy`。
-- 未执行 TestFlight upload；需 App Store Connect App 记录、Distribution 签名和上传权限。
-- 未做完整人工交互回归；本轮完成了模拟器启动、首页截图、真机安装、真机启动和构建级验证。
+- App Store Connect 导出预检未通过：
+  - `xcodebuild -exportArchive -archivePath /tmp/MeiweiAssistant-release-signed.xcarchive -exportPath /tmp/MeiweiAssistant-export -exportOptionsPlist /tmp/meiwei-export-options.plist -allowProvisioningUpdates`
+  - 失败原因：`exportArchive No Accounts`
+  - 失败原因：`exportArchive No profiles for 'cn.hnchpower.eat' were found`
+- 未执行 TestFlight upload；需 App Store Connect App 记录、Apple Distribution 证书、`cn.hnchpower.eat` 分发 profile 和上传权限。
+- 未做完整人工交互回归；本轮完成了模拟器启动、首页截图、真机安装、真机启动、Release archive 重装和构建级资源验证。
 
 ## 已知 Warning
 
@@ -84,6 +100,9 @@
 - 在 Signing & Capabilities 选择可用于 `cn.hnchpower.eat` 的 Team；当前本机 Debug 验证可用 Team 为 `XU97BSCFY6`。
 - 保持 `Automatically manage signing`。
 - 确认 App Store Connect 已创建 Bundle ID 为 `cn.hnchpower.eat` 的 App。
+- 确认本机 Xcode Accounts 对命令行 archive/export 可见；当前命令行导出提示 `No Accounts`。
+- 确认 Apple Developer Portal 中存在 `cn.hnchpower.eat` 的 explicit App ID 和 App Store distribution profile；当前导出提示未找到该 Bundle ID 的 profile。
+- 确认钥匙串中有 Apple Distribution 证书；当前本机仅检测到 Apple Development 证书。
 - 首次上传可继续使用 Build `1`；如果已经上传过同版本同 Build，再递增到 Build `2`。
 - 使用 Release / Any iOS Device 执行 Archive。
 - Organizer 中验证 archive 后上传到 App Store Connect。
@@ -99,7 +118,8 @@
 
 ## 下一阶段计划
 
-- 配置 Apple Developer Team、Signing & Capabilities。
-- 使用真机安装并复测今日推荐、骰子、分工、玄学、烹饪流程、称号弹窗和本地状态恢复。
-- 准备 App Store Connect App 信息、隐私说明和 TestFlight 首包 archive。
+- 在 Xcode 中登录 Apple Developer 账号，并确认命令行 `xcodebuild -exportArchive` 可访问账号。
+- 在 Apple Developer Portal / App Store Connect 创建或确认 `cn.hnchpower.eat`，生成分发签名所需资源。
+- 使用 Xcode Organizer 重新 Archive，并上传 TestFlight。
+- 上传前人工复测今日推荐、骰子、分工、玄学、烹饪流程、称号弹窗和本地状态恢复。
 - 补齐正式截图：今日、饭局 3D 骰子、玄学结果、菜谱详情、称号殿堂。

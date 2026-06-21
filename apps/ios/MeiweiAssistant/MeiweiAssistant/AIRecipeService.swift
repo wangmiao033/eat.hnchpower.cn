@@ -54,7 +54,7 @@ final class AIRecipeSettingsStore {
     var settings: AIRecipeSettings {
         AIRecipeSettings(
             provider: UserDefaults.standard.string(forKey: providerKey) ?? "Gemini",
-            model: UserDefaults.standard.string(forKey: modelKey) ?? "gemini-2.5-flash",
+            model: UserDefaults.standard.string(forKey: modelKey) ?? "gemini-2.5-flash-lite",
             apiKey: KeychainStore.read(service: apiKeyKey) ?? ""
         )
     }
@@ -71,10 +71,13 @@ final class AIRecipeSettingsStore {
 }
 
 private enum KeychainStore {
+    private static let account = "default"
+
     static func read(service: String) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
@@ -82,30 +85,57 @@ private enum KeychainStore {
         guard SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess,
               let data = item as? Data,
               let text = String(data: data, encoding: .utf8) else {
+#if targetEnvironment(simulator)
+            return UserDefaults.standard.string(forKey: fallbackKey(service: service))
+#else
             return nil
+#endif
         }
         return text
     }
 
     static func save(_ value: String, service: String) {
         delete(service: service)
-        guard let data = value.data(using: .utf8), !value.isEmpty else { return }
+        guard let data = value.data(using: .utf8), !value.isEmpty else {
+#if targetEnvironment(simulator)
+            UserDefaults.standard.removeObject(forKey: fallbackKey(service: service))
+#endif
+            return
+        }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
             kSecValueData as String: data,
             kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
         ]
-        SecItemAdd(query as CFDictionary, nil)
+        let status = SecItemAdd(query as CFDictionary, nil)
+#if targetEnvironment(simulator)
+        if status == errSecSuccess {
+            UserDefaults.standard.removeObject(forKey: fallbackKey(service: service))
+        } else {
+            UserDefaults.standard.set(value, forKey: fallbackKey(service: service))
+        }
+#endif
     }
 
     static func delete(service: String) {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account
         ]
         SecItemDelete(query as CFDictionary)
+#if targetEnvironment(simulator)
+        UserDefaults.standard.removeObject(forKey: fallbackKey(service: service))
+#endif
     }
+
+#if targetEnvironment(simulator)
+    private static func fallbackKey(service: String) -> String {
+        "meiwei.simulator.keychain.\(service).\(account)"
+    }
+#endif
 }
 
 final class AIRecipeService {
@@ -134,13 +164,21 @@ final class AIRecipeService {
             )
         }
 
-        do {
-            let recipes = try await generateWithGemini(ingredients: ingredients, preferences: preferences, settings: settings)
-            return AIRecipeResult(recipes: recipes, mode: .gemini, message: "已用 \(settings.provider) · \(settings.model) 生成。")
-        } catch {
-            let fallback = Self.localRecipes(ingredients: ingredients, preferences: preferences)
-            return AIRecipeResult(recipes: fallback, mode: .localFallback, message: error.localizedDescription)
+        var lastError: Error?
+        for model in Self.geminiModelFallbacks(preferredModel: settings.model) {
+            do {
+                var requestSettings = settings
+                requestSettings.model = model
+                let recipes = try await generateWithGemini(ingredients: ingredients, preferences: preferences, settings: requestSettings)
+                let note = model == settings.model ? "" : "（已自动切换备用模型）"
+                return AIRecipeResult(recipes: recipes, mode: .gemini, message: "已用 \(settings.provider) · \(model) 生成\(note)。")
+            } catch {
+                lastError = error
+            }
         }
+
+        let fallback = Self.localRecipes(ingredients: ingredients, preferences: preferences)
+        return AIRecipeResult(recipes: fallback, mode: .localFallback, message: lastError?.localizedDescription ?? AIRecipeError.apiError("").localizedDescription)
     }
 
     private func generateWithGemini(ingredients: String, preferences: [String], settings: AIRecipeSettings) async throws -> [Recipe] {
@@ -177,6 +215,18 @@ final class AIRecipeService {
         }
         guard !recipes.isEmpty else { throw AIRecipeError.noRecipe }
         return Array(recipes)
+    }
+
+    private static func geminiModelFallbacks(preferredModel: String) -> [String] {
+        var models = [
+            preferredModel.trimmingCharacters(in: .whitespacesAndNewlines),
+            "gemini-2.5-flash-lite",
+            "gemini-2.0-flash"
+        ]
+        models.removeAll { $0.isEmpty }
+
+        var seen = Set<String>()
+        return models.filter { seen.insert($0).inserted }
     }
 
     private static func prompt(ingredients: String, preferences: [String]) -> String {

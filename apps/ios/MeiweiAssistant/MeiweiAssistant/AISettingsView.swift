@@ -34,7 +34,7 @@ struct AISettingsView: View {
                         .font(.headline)
 
                     field(title: "服务商", text: $provider, placeholder: "Gemini")
-                    field(title: "模型", text: $model, placeholder: "gemini-2.5-flash")
+                    field(title: "模型", text: $model, placeholder: "gemini-2.5-flash-lite")
 
                     VStack(alignment: .leading, spacing: 8) {
                         Text("API Key")
@@ -120,10 +120,14 @@ struct AISettingsView: View {
     private func save() {
         AIRecipeSettingsStore.shared.save(AIRecipeSettings(
             provider: provider.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Gemini" : provider,
-            model: model.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "gemini-2.5-flash" : model,
+            model: model.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "gemini-2.5-flash-lite" : model,
             apiKey: apiKey
         ))
-        savedMessage = apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "已保存模型配置，当前会使用本地生成兜底。" : "已保存，AI 菜谱创作将优先调用 Gemini。"
+        let savedSettings = AIRecipeSettingsStore.shared.settings
+        provider = savedSettings.provider
+        model = savedSettings.model
+        apiKey = savedSettings.apiKey
+        savedMessage = savedSettings.isConfigured ? "已保存，AI 菜谱创作将优先调用 Gemini。" : "已保存模型配置，当前会使用本地生成兜底。"
     }
 
     private func clearKey() {

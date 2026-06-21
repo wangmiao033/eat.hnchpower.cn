@@ -5,7 +5,8 @@
 ## 当前方案
 
 - 服务商：Google Gemini API
-- App 默认模型：`gemini-2.5-flash`
+- App 默认模型：`gemini-2.5-flash-lite`
+- 备用模型：用户配置模型请求失败时，会自动尝试 `gemini-2.5-flash-lite`、`gemini-2.0-flash`
 - 使用方式：BYOK，用户在 App 内填写自己的 API Key
 - Key 存储：iOS Keychain，本机保存，不提交到仓库
 - 无 Key 时：使用本地生成兜底，仍可生成 3 道可做菜谱
@@ -31,14 +32,14 @@ iOS App -> 自有后端 -> AI Provider
 填写：
 
 - 服务商：`Gemini`
-- 模型：`gemini-2.5-flash`
+- 模型：`gemini-2.5-flash-lite`
 - API Key：从 Google AI Studio 创建
 
 ## 功能行为
 
 ### 已配置 API Key
 
-「AI 菜谱创作」会调用 Gemini，按用户输入的食材、口味和场景生成 3 道菜谱。结果会转成 App 内的 `Recipe` 模型，可进入菜谱详情和烹饪流程。
+「AI 菜谱创作」会调用 Gemini，按用户输入的食材、口味和场景生成 3 道菜谱。结果会转成 App 内的 `Recipe` 模型，可进入菜谱详情和烹饪流程。如果当前模型高负载或不可用，会自动尝试备用模型。
 
 ### 未配置 API Key 或请求失败
 

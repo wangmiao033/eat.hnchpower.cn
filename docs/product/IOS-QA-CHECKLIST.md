@@ -9,7 +9,7 @@
 - 模拟器 ID：B22D77F4-C6DD-4EEC-9467-75363A39C3FD
 - 模拟器 iOS：26.5
 - 真机：iPhone 17 Pro，iOS 26.5.1
-- 真机状态：`devicectl` 显示 `available (paired)`，但命令行签名缺少 Xcode Account / provisioning profile
+- 真机状态：`devicectl` 显示 `available (paired)`，已完成 Debug 安装和启动验证
 - 工程：`apps/ios/MeiweiAssistant/MeiweiAssistant.xcodeproj`
 - Scheme：`MeiweiAssistant`
 - Bundle Identifier：`cn.hnchpower.eat`
@@ -17,7 +17,7 @@
 - Version：`1.0.0`
 - Build：`1`
 - Signing：`CODE_SIGN_STYLE = Automatic`
-- Team：不写入仓库；由本机 Xcode Signing & Capabilities 或命令行临时参数提供
+- Team：不写入仓库；本机临时使用 `XU97BSCFY6` 完成 Debug 签名验证
 
 ## 已通过项
 
@@ -30,6 +30,19 @@
 - App 可安装到模拟器。
 - App 可启动到前台，未再出现共享 JSON 解码崩溃。
 - 首页截图通过，文件：`docs/product/ios-home-smoke.png`。
+- iPhone 17 Pro 真机 Debug 构建通过，临时命令行参数为 `DEVELOPMENT_TEAM=XU97BSCFY6`。
+- iPhone 17 Pro 真机安装通过：
+  - `bundleID = cn.hnchpower.eat`
+- iPhone 17 Pro 真机启动通过，进程列表可见：
+  - `/private/var/containers/Bundle/Application/.../MeiweiAssistant.app/MeiweiAssistant`
+- 真机构建产物已确认包含关键 bundle 资源：
+  - `Assets.car`
+  - `LaunchScreen.storyboardc`
+  - `Assets.scnassets/TrueD6.obj`
+  - `recipes.json`
+  - `titles.json`
+  - `mystic.json`
+  - `party-games.json`
 - 构建产物 `Info.plist` 已确认：
   - `CFBundleIdentifier = cn.hnchpower.eat`
   - `CFBundleDisplayName = 美味助手`
@@ -56,13 +69,9 @@
 
 ## 未通过项
 
-- 真机 Debug 安装未通过；项目不写死 Team，命令行构建提示需要 Development Team。
-- 临时传入本机证书 Team ID 后仍未通过；Xcode 报错：
-  - `No Accounts: Add a new account in Accounts settings.`
-  - `No profiles for 'cn.hnchpower.eat' were found`
-- 真机截图未生成；需要先在本机 Xcode 登录 Apple Account，并为 `cn.hnchpower.eat` 生成 development provisioning profile。
+- 真机截图未生成；当前 Xcode 26.5 的 `devicectl` 没有通用 screenshot 子命令，本机也未安装 `idevicescreenshot` / `ios-deploy`。
 - 未执行 TestFlight upload；需 App Store Connect App 记录、Distribution 签名和上传权限。
-- 未做完整人工交互回归；本轮完成了模拟器启动、首页截图和构建级验证。
+- 未做完整人工交互回归；本轮完成了模拟器启动、首页截图、真机安装、真机启动和构建级验证。
 
 ## 已知 Warning
 
@@ -72,7 +81,7 @@
 ## TestFlight 上传前检查项
 
 - 在 Xcode Settings > Accounts 登录 Apple Developer 账号。
-- 在 Signing & Capabilities 选择可用于 `cn.hnchpower.eat` 的 Team。
+- 在 Signing & Capabilities 选择可用于 `cn.hnchpower.eat` 的 Team；当前本机 Debug 验证可用 Team 为 `XU97BSCFY6`。
 - 保持 `Automatically manage signing`。
 - 确认 App Store Connect 已创建 Bundle ID 为 `cn.hnchpower.eat` 的 App。
 - 首次上传可继续使用 Build `1`；如果已经上传过同版本同 Build，再递增到 Build `2`。

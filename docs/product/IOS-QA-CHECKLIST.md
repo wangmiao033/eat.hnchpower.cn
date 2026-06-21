@@ -12,7 +12,8 @@
 - 真机状态：`devicectl` 显示 `available (paired)`，但命令行签名缺少 Xcode Account / provisioning profile
 - 工程：`apps/ios/MeiweiAssistant/MeiweiAssistant.xcodeproj`
 - Scheme：`MeiweiAssistant`
-- Bundle Identifier：`cn.hnchpower.meiwei`
+- Bundle Identifier：`cn.hnchpower.eat`
+- Bundle ID 说明：由 Web 域名 `eat.hnchpower.cn` 采用反向域名格式确定
 - Version：`1.0.0`
 - Build：`1`
 - Signing：`CODE_SIGN_STYLE = Automatic`
@@ -30,7 +31,7 @@
 - App 可启动到前台，未再出现共享 JSON 解码崩溃。
 - 首页截图通过，文件：`docs/product/ios-home-smoke.png`。
 - 构建产物 `Info.plist` 已确认：
-  - `CFBundleIdentifier = cn.hnchpower.meiwei`
+  - `CFBundleIdentifier = cn.hnchpower.eat`
   - `CFBundleDisplayName = 美味助手`
   - `CFBundleShortVersionString = 1.0.0`
   - `CFBundleVersion = 1`
@@ -58,8 +59,8 @@
 - 真机 Debug 安装未通过；项目不写死 Team，命令行构建提示需要 Development Team。
 - 临时传入本机证书 Team ID 后仍未通过；Xcode 报错：
   - `No Accounts: Add a new account in Accounts settings.`
-  - `No profiles for 'cn.hnchpower.meiwei' were found`
-- 真机截图未生成；需要先在本机 Xcode 登录 Apple Account，并为 `cn.hnchpower.meiwei` 生成 development provisioning profile。
+  - `No profiles for 'cn.hnchpower.eat' were found`
+- 真机截图未生成；需要先在本机 Xcode 登录 Apple Account，并为 `cn.hnchpower.eat` 生成 development provisioning profile。
 - 未执行 TestFlight upload；需 App Store Connect App 记录、Distribution 签名和上传权限。
 - 未做完整人工交互回归；本轮完成了模拟器启动、首页截图和构建级验证。
 
@@ -71,9 +72,9 @@
 ## TestFlight 上传前检查项
 
 - 在 Xcode Settings > Accounts 登录 Apple Developer 账号。
-- 在 Signing & Capabilities 选择可用于 `cn.hnchpower.meiwei` 的 Team。
+- 在 Signing & Capabilities 选择可用于 `cn.hnchpower.eat` 的 Team。
 - 保持 `Automatically manage signing`。
-- 确认 App Store Connect 已创建 Bundle ID 为 `cn.hnchpower.meiwei` 的 App。
+- 确认 App Store Connect 已创建 Bundle ID 为 `cn.hnchpower.eat` 的 App。
 - 首次上传可继续使用 Build `1`；如果已经上传过同版本同 Build，再递增到 Build `2`。
 - 使用 Release / Any iOS Device 执行 Archive。
 - Organizer 中验证 archive 后上传到 App Store Connect。

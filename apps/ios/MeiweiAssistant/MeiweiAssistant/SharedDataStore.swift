@@ -36,7 +36,6 @@ private struct SharedRecipeRecord: Decodable {
     let category: String
     let time: Int
     let difficulty: String
-    let calories: Int
     let tags: [String]
     let moodTags: [String]
     let luckyIngredients: [String]
@@ -245,9 +244,6 @@ final class SharedDataStore {
             steps: record.steps.enumerated().map { index, text in
                 RecipeStep(id: index + 1, text: text, minutes: nil)
             },
-            calories: record.calories,
-            protein: proteinEstimate(for: record),
-            healthScore: healthScoreEstimate(for: record),
             beverage: beverage(for: record),
             artwork: artwork(for: record.id)
         )
@@ -262,24 +258,9 @@ final class SharedDataStore {
         }
     }
 
-    private static func proteinEstimate(for record: SharedRecipeRecord) -> Int {
-        if record.tags.contains(where: { $0.contains("高蛋白") }) { return 32 }
-        if record.name.contains("牛") { return 42 }
-        if record.name.contains("鸡") { return 34 }
-        if record.name.contains("虾") { return 31 }
-        if record.name.contains("蛋") || record.name.contains("豆腐") { return 20 }
-        return 16
-    }
-
-    private static func healthScoreEstimate(for record: SharedRecipeRecord) -> Double {
-        if record.tags.contains(where: { $0.contains("减脂") || $0.contains("清淡") }) { return 8.8 }
-        if record.tags.contains(where: { $0.contains("麻辣") || $0.contains("硬菜") }) { return 7.6 }
-        return 8.2
-    }
-
     private static func beverage(for record: SharedRecipeRecord) -> String {
         if record.tags.contains(where: { $0.contains("麻辣") || $0.contains("酸辣") }) { return "冰镇酸梅汤" }
-        if record.tags.contains(where: { $0.contains("清淡") || $0.contains("减脂") }) { return "清香乌龙茶" }
+        if record.tags.contains(where: { $0.contains("清淡") || $0.contains("清爽") }) { return "清香乌龙茶" }
         return "焙火乌龙"
     }
 

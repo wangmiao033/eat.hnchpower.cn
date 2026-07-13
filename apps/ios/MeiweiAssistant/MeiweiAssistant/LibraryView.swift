@@ -27,7 +27,7 @@ struct LibraryView: View {
                 .pickerStyle(.segmented)
 
                 LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(SampleData.recipes.prefix(4)) { recipe in
+                    ForEach(SampleData.recipes) { recipe in
                         NavigationLink {
                             RecipeDetailView(recipe: recipe)
                         } label: {
@@ -55,6 +55,13 @@ struct LibraryView: View {
                 }
 
                 Text("更多工具").font(.title3.bold()).padding(.top, 8)
+                NavigationLink {
+                    ShoppingListView()
+                } label: {
+                    toolRow("采购清单", subtitle: "按菜谱和人数自动合并买菜清单", icon: "cart")
+                }
+                .buttonStyle(.plain)
+
                 NavigationLink {
                     TableMenuView()
                 } label: {

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CreateRecipeView: View {
-    private let preferences = ["20 分钟内", "下饭", "清淡", "高蛋白", "一人食", "少油"]
+    private let preferences = ["20 分钟内", "下饭", "清淡", "肉蛋搭配", "一人食", "少油"]
     private let cuisines = [
         ("家常菜", "熟悉、稳妥、容易复刻"),
         ("川味", "麻辣鲜香，层次分明"),

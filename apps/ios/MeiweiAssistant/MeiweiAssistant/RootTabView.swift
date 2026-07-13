@@ -19,6 +19,7 @@ struct RootTabView: View {
                     .tabItem { Label("我的", systemImage: "person") }.tag(AppTab.profile)
             }
             .tint(AppTheme.ink)
+            .preferredColorScheme(.light)
 
             if let unlock = growth.activeUnlock {
                 TitleUnlockOverlay(presentation: unlock) {

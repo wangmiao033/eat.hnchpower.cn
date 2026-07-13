@@ -25,9 +25,6 @@ enum SampleData {
                 .init(id: 2, text: "热锅下油，鸡蛋炒至刚凝固即盛出，保留嫩度。", minutes: 3),
                 .init(id: 3, text: "番茄炒出汁，倒回鸡蛋，加入盐和少量糖快速翻匀。", minutes: 6)
             ],
-            calories: 320,
-            protein: 18,
-            healthScore: 8.4,
             beverage: "清香乌龙茶",
             artwork: .tomatoEgg
         ),
@@ -37,7 +34,7 @@ enum SampleData {
             subtitle: "鸡肉鲜嫩，香菇吸满汤汁，清淡但不寡。",
             timeMinutes: 25,
             difficulty: "中等",
-            tags: ["清淡", "高蛋白", "蒸菜"],
+            tags: ["清淡", "肉蛋搭配", "蒸菜"],
             ingredients: [
                 .init(id: "chicken", name: "鸡腿肉", amount: "300 克"),
                 .init(id: "mushroom", name: "香菇", amount: "6 朵"),
@@ -48,19 +45,16 @@ enum SampleData {
                 .init(id: 2, text: "香菇切片，与姜丝一起铺在鸡肉上。", minutes: 3),
                 .init(id: 3, text: "水开后蒸 12 分钟，出锅撒葱。", minutes: 12)
             ],
-            calories: 410,
-            protein: 36,
-            healthScore: 8.8,
             beverage: "桂花乌龙",
             artwork: .mushroomChicken
         ),
         Recipe(
             id: "shrimp-broccoli",
             name: "虾仁西兰花",
-            subtitle: "清爽高蛋白，十几分钟完成。",
+            subtitle: "清爽鲜嫩，十几分钟完成。",
             timeMinutes: 16,
             difficulty: "简单",
-            tags: ["减脂", "高蛋白", "清淡"],
+            tags: ["清爽", "肉蛋搭配", "清淡"],
             ingredients: [
                 .init(id: "shrimp", name: "虾仁", amount: "200 克"),
                 .init(id: "broccoli", name: "西兰花", amount: "半颗"),
@@ -71,9 +65,6 @@ enum SampleData {
                 .init(id: 2, text: "蒜末爆香，下虾仁炒至变色。", minutes: 4),
                 .init(id: 3, text: "倒入西兰花，加盐和黑胡椒翻匀。", minutes: 6)
             ],
-            calories: 280,
-            protein: 31,
-            healthScore: 9.1,
             beverage: "柠檬苏打水",
             artwork: .shrimpBroccoli
         ),
@@ -94,9 +85,6 @@ enum SampleData {
                 .init(id: 2, text: "炒香肉末、豆瓣酱和蒜末。", minutes: 6),
                 .init(id: 3, text: "加水烧开后下豆腐，勾薄芡收汁。", minutes: 9)
             ],
-            calories: 460,
-            protein: 24,
-            healthScore: 7.5,
             beverage: "冰镇酸梅汤",
             artwork: .mapoTofu
         ),
@@ -117,9 +105,6 @@ enum SampleData {
                 .init(id: 2, text: "炒香葱姜和牛肉，加生抽、老抽与热水。", minutes: 10),
                 .init(id: 3, text: "炖 35 分钟后下土豆，再炖至软糯。", minutes: 35)
             ],
-            calories: 620,
-            protein: 42,
-            healthScore: 7.8,
             beverage: "焙火乌龙",
             artwork: .beefPotato
         )
@@ -128,7 +113,7 @@ enum SampleData {
 
 enum DailyRecipeProvider {
     static func recipe(for date: Date = .now, recipes: [Recipe] = SampleData.recipes) -> Recipe {
-        guard !recipes.isEmpty else { preconditionFailure("Recipe list cannot be empty") }
+        guard !recipes.isEmpty else { return SampleData.fallbackRecipes[0] }
         let day = Calendar.current.ordinality(of: .day, in: .era, for: date) ?? 0
         return recipes[abs(day) % recipes.count]
     }

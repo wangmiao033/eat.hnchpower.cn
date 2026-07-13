@@ -2,11 +2,13 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     @EnvironmentObject private var growth: GrowthStore
+    @EnvironmentObject private var shoppingList: ShoppingListStore
     let recipe: Recipe
     @State private var servings = 2
     @State private var checked: Set<String> = []
     @State private var showingCookingMode = false
     @State private var didComplete = false
+    @State private var showingShoppingAdded = false
 
     var body: some View {
         ScrollView {
@@ -30,10 +32,19 @@ struct RecipeDetailView: View {
                     HStack(spacing: 8) {
                         stat("\(recipe.timeMinutes) 分钟", label: "总用时")
                         stat(recipe.difficulty, label: "难度")
-                        stat("\(recipe.calories) kcal", label: "每份")
+                        stat("\(servings) 人份", label: "可调")
                     }
 
                     ingredientCard
+
+                    Button {
+                        shoppingList.add(recipe: recipe, servings: servings)
+                        showingShoppingAdded = true
+                    } label: {
+                        Label("加入采购清单", systemImage: "cart.badge.plus")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(SecondaryButtonStyle())
 
                     Button {
                         showingCookingMode = true
@@ -78,6 +89,11 @@ struct RecipeDetailView: View {
         .sheet(isPresented: $showingCookingMode) {
             CookingModeView(recipe: recipe) { completeRecipe() }
         }
+        .alert("已加入采购清单", isPresented: $showingShoppingAdded) {
+            Button("知道了", role: .cancel) { }
+        } message: {
+            Text("\(recipe.name) 的食材已按 \(servings) 人份加入，可在菜谱页的“采购清单”里勾选。")
+        }
     }
 
     private func completeRecipe() {
@@ -110,7 +126,8 @@ struct RecipeDetailView: View {
                         Text(ingredient.name)
                             .strikethrough(checked.contains(ingredient.id))
                         Spacer()
-                        Text(ingredient.amount).foregroundStyle(AppTheme.secondary)
+                        Text(scaledIngredientAmount(ingredient.amount))
+                            .foregroundStyle(AppTheme.secondary)
                     }
                     .font(.subheadline)
                 }
@@ -119,6 +136,44 @@ struct RecipeDetailView: View {
         }
         .padding(18)
         .meiweiCard()
+    }
+
+    private func scaledIngredientAmount(_ amount: String) -> String {
+        let trimmed = amount.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, !trimmed.contains("适量") && !trimmed.contains("少许") else {
+            return trimmed.isEmpty ? "适量" : trimmed
+        }
+
+        if trimmed.hasPrefix("半") {
+            let unit = String(trimmed.dropFirst())
+            let quantity = 0.5 * Double(servings) / 2.0
+            return displayAmount(quantity: quantity, unit: unit)
+        }
+
+        let pattern = #"^([0-9]+(?:\.[0-9]+)?)(?:\s*)(.*)$"#
+        guard let regex = try? NSRegularExpression(pattern: pattern),
+              let match = regex.firstMatch(in: trimmed, range: NSRange(trimmed.startIndex..., in: trimmed)),
+              let numberRange = Range(match.range(at: 1), in: trimmed)
+        else {
+            return trimmed
+        }
+
+        let value = Double(trimmed[numberRange]) ?? 0
+        let unitRange = Range(match.range(at: 2), in: trimmed)
+        let unit = unitRange.map { String(trimmed[$0]).trimmingCharacters(in: .whitespacesAndNewlines) }.flatMap { $0.isEmpty ? nil : $0 }
+        let quantity = value * Double(servings) / 2.0
+        return displayAmount(quantity: quantity, unit: unit)
+    }
+
+    private func displayAmount(quantity: Double, unit: String?) -> String {
+        let rounded = (quantity * 10).rounded() / 10
+        let number: String
+        if rounded.rounded() == rounded {
+            number = String(Int(rounded))
+        } else {
+            number = String(format: "%.1f", rounded)
+        }
+        return unit.map { "\(number) \($0)" } ?? number
     }
 
     private var stepsCard: some View {
@@ -154,13 +209,13 @@ struct RecipeDetailView: View {
 
     private var analysisCard: some View {
         VStack(spacing: 0) {
-            infoRow("营养分析", value: "健康评分 \(recipe.healthScore.formatted(.number.precision(.fractionLength(1))))")
+            infoRow("口味标签", value: recipe.tags.prefix(2).joined(separator: " · "))
             Divider().opacity(0.45)
-            infoRow("蛋白质", value: "约 \(recipe.protein) 克")
+            infoRow("备料提醒", value: "先切配再开火")
             Divider().opacity(0.45)
             infoRow("饮品搭配", value: recipe.beverage)
             Divider().opacity(0.45)
-            infoRow("烹饪技巧", value: "3 条建议")
+            infoRow("烹饪技巧", value: "按步骤控火")
         }
         .padding(.horizontal, 18)
         .meiweiCard()
@@ -193,21 +248,31 @@ struct CookingModeView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var stepIndex = 0
 
+    private var safeSteps: [RecipeStep] {
+        recipe.steps.isEmpty
+            ? [RecipeStep(id: 1, text: "这道菜的步骤还在整理中，先按食材准备、下锅加热、调味收汁三步完成。", minutes: nil)]
+            : recipe.steps
+    }
+
+    private var currentStep: RecipeStep {
+        safeSteps[min(max(0, stepIndex), safeSteps.count - 1)]
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                ProgressView(value: Double(stepIndex + 1), total: Double(recipe.steps.count))
+                ProgressView(value: Double(min(stepIndex + 1, safeSteps.count)), total: Double(safeSteps.count))
                     .tint(AppTheme.accent)
 
                 Spacer()
-                Text("步骤 \(stepIndex + 1) / \(recipe.steps.count)")
+                Text("步骤 \(min(stepIndex + 1, safeSteps.count)) / \(safeSteps.count)")
                     .font(.caption.weight(.bold))
                     .foregroundStyle(AppTheme.accent)
-                Text(recipe.steps[stepIndex].text)
+                Text(currentStep.text)
                     .font(.system(size: 28, weight: .bold))
                     .multilineTextAlignment(.center)
                     .lineSpacing(6)
-                if let minutes = recipe.steps[stepIndex].minutes {
+                if let minutes = currentStep.minutes {
                     Label("约 \(minutes) 分钟", systemImage: "timer")
                         .font(.headline)
                         .foregroundStyle(AppTheme.secondary)
@@ -218,8 +283,8 @@ struct CookingModeView: View {
                     Button("上一步") { stepIndex = max(0, stepIndex - 1) }
                         .buttonStyle(SecondaryButtonStyle())
                         .disabled(stepIndex == 0)
-                    Button(stepIndex == recipe.steps.count - 1 ? "完成" : "下一步") {
-                        if stepIndex == recipe.steps.count - 1 { onComplete(); dismiss() }
+                    Button(stepIndex >= safeSteps.count - 1 ? "完成" : "下一步") {
+                        if stepIndex >= safeSteps.count - 1 { onComplete(); dismiss() }
                         else { stepIndex += 1 }
                     }
                     .buttonStyle(PrimaryButtonStyle())

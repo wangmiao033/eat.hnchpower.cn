@@ -6,7 +6,6 @@
     "category": "快手下饭",
     "time": 12,
     "difficulty": "easy",
-    "calories": 320,
     "tags": [
       "快手",
       "下饭",
@@ -58,7 +57,6 @@
     "category": "下饭硬菜",
     "time": 20,
     "difficulty": "medium",
-    "calories": 410,
     "tags": [
       "麻辣",
       "下饭",
@@ -107,12 +105,11 @@
     "id": "shrimp-broccoli",
     "name": "虾仁西兰花",
     "cuisine": "轻食",
-    "category": "高蛋白",
+    "category": "肉蛋搭配",
     "time": 16,
     "difficulty": "easy",
-    "calories": 260,
     "tags": [
-      "高蛋白",
+      "肉蛋搭配",
       "少油",
       "清爽"
     ],
@@ -126,7 +123,7 @@
       "西兰花"
     ],
     "flavor": "清鲜",
-    "reason": "清爽不负担，适合想吃得干净但又不想将就的一餐。",
+    "reason": "清爽不油腻，适合想吃得清爽但又不想将就的一餐。",
     "ingredients": [
       {
         "name": "虾仁",
@@ -162,10 +159,9 @@
     "category": "清淡蒸菜",
     "time": 25,
     "difficulty": "medium",
-    "calories": 390,
     "tags": [
       "清淡",
-      "高蛋白",
+      "肉蛋搭配",
       "蒸菜"
     ],
     "moodTags": [
@@ -214,7 +210,6 @@
     "category": "饭局硬菜",
     "time": 55,
     "difficulty": "hard",
-    "calories": 560,
     "tags": [
       "硬菜",
       "炖煮",
@@ -266,7 +261,6 @@
     "category": "素菜快炒",
     "time": 15,
     "difficulty": "easy",
-    "calories": 230,
     "tags": [
       "酸辣",
       "素菜",
@@ -318,7 +312,6 @@
     "category": "素菜下饭",
     "time": 24,
     "difficulty": "medium",
-    "calories": 360,
     "tags": [
       "下饭",
       "素菜",
@@ -370,7 +363,6 @@
     "category": "清爽汤菜",
     "time": 28,
     "difficulty": "medium",
-    "calories": 300,
     "tags": [
       "汤",
       "清淡",
@@ -422,7 +414,6 @@
     "category": "一人食",
     "time": 30,
     "difficulty": "medium",
-    "calories": 520,
     "tags": [
       "一人食",
       "便当",
@@ -474,7 +465,6 @@
     "category": "香辣盖饭",
     "time": 18,
     "difficulty": "medium",
-    "calories": 510,
     "tags": [
       "香辣",
       "盖饭",
@@ -517,6 +507,85 @@
     "tips": [
       "罗勒最后放，香气最明显。",
       "可加煎蛋提升满足感。"
+    ]
+  },
+  {
+    "id": "kung-pao-chicken",
+    "name": "宫保鸡丁",
+    "cuisine": "川味家常",
+    "category": "经典下饭",
+    "time": 28,
+    "difficulty": "medium",
+    "tags": [
+      "下饭",
+      "经典",
+      "微辣"
+    ],
+    "moodTags": [
+      "开心",
+      "疲惫",
+      "想家"
+    ],
+    "luckyIngredients": [
+      "鸡腿肉",
+      "花生米"
+    ],
+    "flavor": "酸甜咸香",
+    "reason": "鸡丁嫩、花生脆，酸甜微辣很开胃，是不知道吃什么时非常稳的一道菜。",
+    "ingredients": [
+      {
+        "name": "鸡腿肉或鸡胸肉",
+        "amount": "300g"
+      },
+      {
+        "name": "花生米",
+        "amount": "50g"
+      },
+      {
+        "name": "大葱",
+        "amount": "1 根"
+      },
+      {
+        "name": "姜",
+        "amount": "10g"
+      },
+      {
+        "name": "蒜",
+        "amount": "3 瓣"
+      },
+      {
+        "name": "干辣椒",
+        "amount": "6 个"
+      },
+      {
+        "name": "生抽",
+        "amount": "2 勺"
+      },
+      {
+        "name": "香醋",
+        "amount": "1 勺"
+      },
+      {
+        "name": "白糖",
+        "amount": "1 勺"
+      },
+      {
+        "name": "淀粉",
+        "amount": "1 勺"
+      },
+      {
+        "name": "料酒",
+        "amount": "1 勺"
+      }
+    ],
+    "steps": [
+      "鸡肉切丁，用料酒、生抽和淀粉抓匀腌 10 分钟。",
+      "葱姜蒜和干辣椒爆香，下鸡丁快速滑炒至变色。",
+      "倒入生抽、香醋、白糖调成的料汁，最后放花生米翻匀出锅。"
+    ],
+    "tips": [
+      "鸡丁不要炒太久，变色后尽快调味收汁。",
+      "花生米最后放，口感更脆。"
     ]
   }
 ]

@@ -9,7 +9,9 @@ struct TodayView: View {
         _selectedIndex = State(initialValue: SampleData.recipes.firstIndex(of: daily) ?? 0)
     }
 
-    private var selectedRecipe: Recipe { recipes[selectedIndex] }
+    private var selectedRecipe: Recipe {
+        recipes[safe: selectedIndex] ?? recipes.first ?? SampleData.fallbackRecipes[0]
+    }
 
     var body: some View {
         ScrollView {
@@ -33,6 +35,7 @@ struct TodayView: View {
                 Text("今天吃什么")
                     .font(.system(size: 34, weight: .bold, design: .default))
                     .tracking(-1.2)
+                    .foregroundStyle(AppTheme.ink)
             }
             Spacer()
             HStack(spacing: 9) {
@@ -68,6 +71,7 @@ struct TodayView: View {
                     .frame(height: 270)
                 Text("每日一菜")
                     .font(.caption.weight(.bold))
+                    .foregroundStyle(AppTheme.ink)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                     .background(.ultraThinMaterial, in: Capsule())
@@ -81,6 +85,7 @@ struct TodayView: View {
                     .foregroundStyle(AppTheme.accent)
                 Text(selectedRecipe.name)
                     .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(AppTheme.ink)
                 Text("\(selectedRecipe.subtitle) 今天先从这道能下锅的推荐开始。")
                     .font(.subheadline)
                     .foregroundStyle(AppTheme.secondary)
@@ -89,7 +94,7 @@ struct TodayView: View {
                 HStack(spacing: 8) {
                     metric("\(selectedRecipe.timeMinutes) 分钟")
                     metric(selectedRecipe.difficulty)
-                    metric("约 \(selectedRecipe.calories) kcal")
+                    metric(selectedRecipe.tags.first ?? "家常")
                 }
 
                 HStack(spacing: 10) {
@@ -103,7 +108,7 @@ struct TodayView: View {
 
                     Button {
                         withAnimation(.snappy) {
-                            selectedIndex = (selectedIndex + 1) % recipes.count
+                            selectedIndex = recipes.isEmpty ? 0 : (selectedIndex + 1) % recipes.count
                         }
                     } label: {
                         Label("换一道", systemImage: "arrow.clockwise")
@@ -122,6 +127,7 @@ struct TodayView: View {
         VStack(alignment: .leading, spacing: 13) {
             HStack {
                 Text("今晚灵感").font(.title3.bold())
+                    .foregroundStyle(AppTheme.ink)
                 Spacer()
                 Text("查看全部").font(.caption).foregroundStyle(AppTheme.secondary)
             }
@@ -135,6 +141,7 @@ struct TodayView: View {
                             FoodArtwork(style: recipe.artwork).frame(height: 110)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(recipe.name).font(.subheadline.bold())
+                                    .foregroundStyle(AppTheme.ink)
                                 Text("\(recipe.timeMinutes) 分钟 · \(recipe.tags.first ?? recipe.difficulty)")
                                     .font(.caption2)
                                     .foregroundStyle(AppTheme.secondary)
@@ -180,5 +187,11 @@ struct SecondaryButtonStyle: ButtonStyle {
             .padding(.horizontal, 15)
             .frame(height: 50)
             .background(Color.black.opacity(configuration.isPressed ? 0.09 : 0.05), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+private extension Array {
+    subscript(safe index: Int) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }

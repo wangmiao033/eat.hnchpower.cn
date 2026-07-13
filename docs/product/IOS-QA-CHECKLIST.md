@@ -15,7 +15,7 @@
 - Bundle Identifier：`cn.hnchpower.eat`
 - Bundle ID 说明：由 Web 域名 `eat.hnchpower.cn` 采用反向域名格式确定
 - Version：`1.0.0`
-- Build：`1`
+- Build：`3`
 - Signing：`CODE_SIGN_STYLE = Automatic`
 - Team：不写入仓库；本机临时使用 `XU97BSCFY6` 完成 Debug/Release 本地签名验证
 
@@ -40,6 +40,26 @@
   - Entitlements：`beta-reports-active = true`，`get-task-allow = false`
   - Version：`1.0.0`
   - Build：`1`
+- TestFlight/App Store Connect 上传通过：
+  - 时间：`2026-06-21 21:55 CST`
+  - 命令：`xcodebuild -exportArchive -archivePath /tmp/MeiweiAssistant.xcarchive -exportPath /tmp/MeiweiAssistantExport -exportOptionsPlist /tmp/MeiweiAssistant-ExportOptions.plist -allowProvisioningUpdates`
+  - 结果：`Upload succeeded. Uploaded MeiweiAssistant`
+  - 上传前修复：App Store Connect 曾拒绝带 alpha 的 AppIcon；已将 `AppIcon.appiconset` 下所有 PNG 合成为不透明图标，复查 `hasAlpha = no`。
+- TestFlight Build `2` 崩溃反馈已定位：
+  - 时间：`2026-06-21 23:06 CST`
+  - 设备：iPhone 17 Pro，iOS 26.5.1，arm64e
+  - Crash log：`docs/product/crashlogs/MeiweiAssistant-2026-06-21-230650.ips`
+  - 异常：`EXC_BREAKPOINT / SIGTRAP`
+  - 符号化定位：`PartyGameView.assignRoles()`，饭局分工时角色数量与参与人数不一致导致数组越界。
+- Build `3` 崩溃修复验证：
+  - 已修复饭局分工数组越界、骰子菜谱候选兜底、烹饪步骤为空兜底、首页/称号/玄学边界访问。
+  - Debug 无签名构建通过。
+  - iPhone 17 Pro 真机 Debug 构建通过。
+  - Release Archive 通过：`/tmp/MeiweiAssistant-build3.xcarchive`
+  - Build `3` archive 产物安装到真机通过。
+  - Build `3` 真机启动通过，进程可见：
+    - `/private/var/containers/Bundle/Application/.../MeiweiAssistant.app/MeiweiAssistant`
+  - Build `3` 启动后未生成新的 `MeiweiAssistant` crash log。
 - iPhone 17 Simulator 构建通过。
 - App 可安装到模拟器。
 - App 可启动到前台，未再出现共享 JSON 解码崩溃。
@@ -49,6 +69,13 @@
   - `bundleID = cn.hnchpower.eat`
 - iPhone 17 Pro 真机启动通过，进程列表可见：
   - `/private/var/containers/Bundle/Application/.../MeiweiAssistant.app/MeiweiAssistant`
+- iPhone 17 Pro 真机 Debug 复测通过：
+  - 时间：`2026-06-21 22:45 CST`
+  - 构建：`xcodebuild -project apps/ios/MeiweiAssistant/MeiweiAssistant.xcodeproj -scheme MeiweiAssistant -configuration Debug -destination 'platform=iOS,id=00008150-001239692202401C' -allowProvisioningUpdates DEVELOPMENT_TEAM=XU97BSCFY6 build`
+  - 安装：`xcrun devicectl device install app --device 5B779D9A-A4E4-53D6-98AA-E2647E8D4306 .../Debug-iphoneos/MeiweiAssistant.app`
+  - 启动：`xcrun devicectl device process launch --device 5B779D9A-A4E4-53D6-98AA-E2647E8D4306 cn.hnchpower.eat`
+  - 设备安装信息：`美味助手 / cn.hnchpower.eat / 1.0.0 / 1`
+  - 进程列表可见：`/private/var/containers/Bundle/Application/.../MeiweiAssistant.app/MeiweiAssistant`
 - iPhone 17 Pro 真机全新安装 Release archive 产物通过：
   - 先卸载旧 App：`xcrun devicectl device uninstall app --device 5B779D9A-A4E4-53D6-98AA-E2647E8D4306 cn.hnchpower.eat`
   - 安装 archive app：`xcrun devicectl device install app --device 5B779D9A-A4E4-53D6-98AA-E2647E8D4306 /tmp/MeiweiAssistant-release-signed.xcarchive/Products/Applications/MeiweiAssistant.app`
@@ -67,7 +94,7 @@
   - `CFBundleIdentifier = cn.hnchpower.eat`
   - `CFBundleDisplayName = 美味助手`
   - `CFBundleShortVersionString = 1.0.0`
-  - `CFBundleVersion = 1`
+  - `CFBundleVersion = 3`
   - `UILaunchStoryboardName = LaunchScreen`
 - Archive 产物已确认包含关键 bundle 资源：
   - `Assets.car`
@@ -102,13 +129,14 @@
   - 失败原因：`exportArchive No Accounts`
   - 失败原因：`exportArchive No profiles for 'cn.hnchpower.eat' were found`
   - Xcode Accounts 登录后已通过导出预检。
-- 未执行 TestFlight upload；需要在 Xcode Organizer 中继续上传并完成 App Store Connect 处理。
+- App Store Connect 构建版本已上传；仍需等待 Apple 处理完成，并在页面选择 Build `1` 后补齐出口合规/审核联系人等提交信息。
 - 未做完整人工交互回归；本轮完成了模拟器启动、首页截图、真机安装、真机启动、Release archive 重装和构建级资源验证。
 
 ## 已知 Warning
 
 - `IDERunDestination: Supported platforms for the buildables in the current scheme is empty.` 构建过程中出现，但不阻塞构建。
 - `Metadata extraction skipped. No AppIntents.framework dependency found.` 当前没有使用 AppIntents，可忽略。
+- `DVTDeveloperAccountManager: Invalid credentials in keychain ... missing Xcode-Username` 在 Build `3` archive 时出现，但 archive 本身成功；说明本机 Xcode 账号钥匙串仍有一条异常凭据。
 
 ## TestFlight 上传前检查项
 
@@ -116,10 +144,13 @@
 - 在 Signing & Capabilities 选择可用于 `cn.hnchpower.eat` 的 Team；当前本机 Debug 验证可用 Team 为 `XU97BSCFY6`。
 - 保持 `Automatically manage signing`。
 - 确认 App Store Connect 已创建 Bundle ID 为 `cn.hnchpower.eat` 的 App。
-- 确认本机 Xcode Accounts 对命令行 archive/export 可见。已完成，`xcodebuild -exportArchive` 通过。
-- 确认 Apple Developer Portal 中存在 `cn.hnchpower.eat` 的 explicit App ID 和 App Store distribution profile。已由导出结果确认。
-- 确认分发签名。已使用 `Cloud Managed Apple Distribution` 导出。
-- 首次上传可继续使用 Build `1`；如果已经上传过同版本同 Build，再递增到 Build `2`。
+- 确认本机 Xcode Accounts 对命令行 archive/export 可见。Build `3` 当前未通过，命令行返回：
+  - `Failed to find an account with App Store Connect access for team XU97BSCFY6`
+  - `exportArchive No Accounts`
+  - `No signing certificate "iOS Distribution" found`
+- 确认 Apple Developer Portal 中存在 `cn.hnchpower.eat` 的 explicit App ID 和 App Store distribution profile。Build `1`/`2` 已上传过，App ID 本身可用。
+- 确认分发签名。Build `3` 需要在 Xcode Organizer 中重新认证账号或生成 Apple Distribution 证书后上传。
+- 当前推荐上传 Build `3`，不要再使用 Build `2`。
 - 使用 Release / Any iOS Device 执行 Archive。
 - Organizer 中验证 archive 后上传到 App Store Connect。
 - 上传前不要提交证书、`.mobileprovision`、导出 IPA、`.xcarchive`。
@@ -134,6 +165,7 @@
 
 ## 下一阶段计划
 
-- 使用 Xcode Organizer 上传 TestFlight。
+- 等待 App Store Connect/TestFlight 完成 Build `3` 处理。
+- 在 App Store Connect 选择构建版本，完成出口合规问题。
 - 上传前人工复测今日推荐、骰子、分工、玄学、烹饪流程、称号弹窗和本地状态恢复。
 - 补齐正式截图：今日、饭局 3D 骰子、玄学结果、菜谱详情、称号殿堂。

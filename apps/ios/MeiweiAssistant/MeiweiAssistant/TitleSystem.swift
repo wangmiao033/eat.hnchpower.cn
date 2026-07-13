@@ -750,7 +750,9 @@ final class GrowthStore: ObservableObject {
 
     var currentMainTitle: MainTitleDefinition {
         let titles = TitleCatalog.main
-        return titles.last(where: { recipeCompletionCount >= $0.requiredRecipeCount }) ?? titles[0]
+        return titles.last(where: { recipeCompletionCount >= $0.requiredRecipeCount })
+            ?? titles.first
+            ?? MainTitleDefinition(id: "fallback", requiredRecipeCount: 0, quality: .common, title: "厨房新手")
     }
 
     var nextMainTitle: MainTitleDefinition? {
@@ -771,10 +773,11 @@ final class GrowthStore: ObservableObject {
     }
 
     func visibleMainTitles(radius: Int = 3) -> [MainTitleDefinition] {
-        guard let index = TitleCatalog.main.firstIndex(of: currentMainTitle) else { return [] }
+        let titles = TitleCatalog.main
+        guard let index = titles.firstIndex(of: currentMainTitle) else { return [] }
         let start = max(0, index - 1)
-        let end = min(TitleCatalog.main.count, index + radius + 1)
-        return Array(TitleCatalog.main[start..<end])
+        let end = min(titles.count, index + radius + 1)
+        return Array(titles[start..<end])
     }
 
     func recordRecipeCompletion() {

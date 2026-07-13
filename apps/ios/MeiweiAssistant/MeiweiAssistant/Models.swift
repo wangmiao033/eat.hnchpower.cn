@@ -9,9 +9,6 @@ struct Recipe: Identifiable, Hashable {
     let tags: [String]
     let ingredients: [RecipeIngredient]
     let steps: [RecipeStep]
-    let calories: Int
-    let protein: Int
-    let healthScore: Double
     let beverage: String
     let artwork: ArtworkStyle
 }

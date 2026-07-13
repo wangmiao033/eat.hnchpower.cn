@@ -241,11 +241,10 @@ final class AIRecipeService {
         - JSON 顶层字段为 recipes，数组长度必须为 3。
         - 每道菜必须能在家做，步骤清晰，适合普通厨房。
         - timeMinutes 为整数，difficulty 使用「简单」「中等」「较难」。
-        - healthScore 为 0 到 10 的数字。
         - ingredients 至少 4 项，每项包含 name 和 amount。
         - steps 必须 3 到 5 步，每步一句话。
         - tags 使用中文短标签。
-        - 不要输出医疗、减肥承诺或过敏安全承诺。
+        - 不要输出身体指标、疾病、治疗、减重承诺或安全承诺相关内容。
 
         JSON 结构：
         {
@@ -258,9 +257,6 @@ final class AIRecipeService {
               "tags": ["家常", "下饭"],
               "ingredients": [{"name": "番茄", "amount": "2 个"}],
               "steps": ["第一步", "第二步", "第三步"],
-              "calories": 420,
-              "protein": 18,
-              "healthScore": 8.2,
               "beverage": "焙火乌龙"
             }
           ]
@@ -294,7 +290,7 @@ final class AIRecipeService {
         let secondary = items.dropFirst().first ?? "青菜"
         let quick = preferences.contains("20 分钟内")
         let light = preferences.contains("清淡") || preferences.contains("少油")
-        let highProtein = preferences.contains("高蛋白")
+        let hasMeatEggPreference = preferences.contains("肉蛋搭配")
 
         return [
             Recipe(
@@ -315,9 +311,6 @@ final class AIRecipeService {
                     RecipeStep(id: 2, text: "热锅少油，先下蒜末炒香，再放入主要食材翻炒。", minutes: 6),
                     RecipeStep(id: 3, text: "加生抽和少量水收汁，出锅前按口味补盐。", minutes: 4)
                 ],
-                calories: light ? 360 : 460,
-                protein: highProtein ? 30 : 18,
-                healthScore: light ? 8.7 : 8.0,
                 beverage: "清香乌龙茶",
                 artwork: .noodles
             ),
@@ -339,9 +332,6 @@ final class AIRecipeService {
                     RecipeStep(id: 2, text: "锅中炒熟 \(primary)，再加入 \(secondary) 和调味料。", minutes: 8),
                     RecipeStep(id: 3, text: "加一点热水形成薄汁，盖在米饭上即可。", minutes: 3)
                 ],
-                calories: 520,
-                protein: highProtein ? 34 : 21,
-                healthScore: 7.9,
                 beverage: "焙火乌龙",
                 artwork: .tomatoEgg
             ),
@@ -363,9 +353,6 @@ final class AIRecipeService {
                     RecipeStep(id: 2, text: "加入 \(primary) 和 \(secondary)，保持小火煮到熟透。", minutes: 10),
                     RecipeStep(id: 3, text: "出锅前用盐调味，想更香可滴几滴香油。", minutes: 2)
                 ],
-                calories: 300,
-                protein: highProtein ? 28 : 16,
-                healthScore: 8.8,
                 beverage: "温热麦茶",
                 artwork: .mushroomChicken
             )
@@ -418,9 +405,6 @@ private struct AIRecipeRecord: Decodable {
     let tags: [String]
     let ingredients: [Ingredient]
     let steps: [String]
-    let calories: Int
-    let protein: Int
-    let healthScore: Double
     let beverage: String
 
     func recipe(index: Int) -> Recipe {
@@ -439,9 +423,6 @@ private struct AIRecipeRecord: Decodable {
             steps: steps.prefix(6).enumerated().map { idx, step in
                 RecipeStep(id: idx + 1, text: step, minutes: nil)
             },
-            calories: max(0, calories),
-            protein: max(0, protein),
-            healthScore: max(0, min(10, healthScore)),
             beverage: beverage.isEmpty ? "清香乌龙茶" : beverage,
             artwork: Self.artwork(tags: tags, name: safeName)
         )

@@ -50,9 +50,9 @@ struct ProfileView: View {
                 VStack(spacing: 0) {
                     setting("饮食偏好", value: "清淡、少油")
                     Divider().opacity(0.5)
-                    setting("忌口与过敏", value: "未设置")
+                    setting("常用口味", value: "家常、下饭")
                     Divider().opacity(0.5)
-                    setting("营养目标", value: "均衡饮食")
+                    setting("采购偏好", value: "按菜谱整理")
                 }
                 .padding(.horizontal, 16)
                 .background(.white, in: RoundedRectangle(cornerRadius: 24, style: .continuous))

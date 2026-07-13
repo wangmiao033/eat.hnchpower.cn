@@ -7,7 +7,7 @@ struct TableMenuView: View {
     @State private var generated = false
 
     private let scenes = ["日常晚餐", "朋友小聚", "家庭聚餐", "生日宴"]
-    private let tastes = ["家常", "清淡", "下饭", "高蛋白"]
+    private let tastes = ["家常", "清淡", "下饭", "鲜香"]
 
     private var dishCount: Int { min(SampleData.recipes.count, max(2, people + 1)) }
 

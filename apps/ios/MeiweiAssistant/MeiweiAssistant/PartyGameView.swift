@@ -261,7 +261,7 @@ struct PartyGameView: View {
 
     private func finishDiceRoll() {
         dieValue = targetDieValue
-        selectedRecipe = candidates[targetDieValue - 1]
+        selectedRecipe = candidates[safe: targetDieValue - 1] ?? candidates.first ?? SampleData.fallbackRecipes[0]
         isRolling = false
         growth.recordDiceRoll()
     }
@@ -271,8 +271,9 @@ struct PartyGameView: View {
         assignments = []
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             let shuffled = participants.shuffled()
-            assignments = Array(roleDefinitions.prefix(participants.count).enumerated()).map { index, role in
-                (role: role.role, person: shuffled[index], symbol: role.symbol)
+            let safePeople = shuffled.isEmpty ? ["我"] : shuffled
+            assignments = Array(roleDefinitions.prefix(safePeople.count).enumerated()).map { index, role in
+                (role: role.role, person: safePeople[safe: index] ?? safePeople[0], symbol: role.symbol)
             }
             isShuffling = false
             growth.recordPartyAssignment()

@@ -158,7 +158,7 @@ struct MysticKitchenView: View {
                     Text("娱乐归娱乐，最后会给你一份真正能下锅的菜谱。").font(.caption2).foregroundStyle(AppTheme.secondary)
                 }
                 Spacer()
-                Text(String(format: "%02d", MysticMode.allCases.firstIndex(of: mode)! + 1)).font(.system(size: 30, weight: .black)).foregroundStyle(AppTheme.ink.opacity(0.08))
+                Text(String(format: "%02d", (MysticMode.allCases.firstIndex(of: mode) ?? 0) + 1)).font(.system(size: 30, weight: .black)).foregroundStyle(AppTheme.ink.opacity(0.08))
             }
             ritualVisual.frame(maxWidth: .infinity).frame(height: 185)
                 .background(RadialGradient(colors: [violet.opacity(0.11), Color(red: 0.98, green: 0.97, blue: 0.99)], center: .center, startRadius: 0, endRadius: 180), in: RoundedRectangle(cornerRadius: 22))
@@ -169,7 +169,7 @@ struct MysticKitchenView: View {
             .font(.subheadline.bold()).foregroundStyle(.white)
             .background(LinearGradient(colors: [plum, Color(red: 0.23, green: 0.13, blue: 0.26)], startPoint: .leading, endPoint: .trailing), in: RoundedRectangle(cornerRadius: 17))
             .buttonStyle(.plain).disabled(casting)
-            Text("玄学内容仅作娱乐；过敏、忌口与营养要求按真实信息优先").font(.system(size: 8)).foregroundStyle(.secondary)
+            Text("玄学内容仅作娱乐；做饭请按真实食材和口味偏好判断").font(.system(size: 8)).foregroundStyle(.secondary)
         }
         .padding(17).background(.white, in: RoundedRectangle(cornerRadius: 29))
         .shadow(color: .black.opacity(0.08), radius: 24, y: 12).padding(.horizontal, 17)
@@ -276,7 +276,7 @@ struct MysticKitchenView: View {
                     ForEach(item.recipe.steps.prefix(3)) { step in HStack(alignment: .top) { Text("\(step.id)").font(.caption.bold()).foregroundStyle(violet); Text(step.text).font(.caption) } }
                 }.padding(15).background(.white, in: RoundedRectangle(cornerRadius: 20))
                 NavigationLink { RecipeDetailView(recipe: item.recipe) } label: { Text("接受天命 · 开始做饭").frame(maxWidth: .infinity) }.buttonStyle(PrimaryButtonStyle())
-                Text("玄学仅供娱乐，菜谱与忌口信息认真负责").font(.caption2).foregroundStyle(AppTheme.secondary)
+                Text("玄学仅供娱乐，结果会落到真实可做菜谱").font(.caption2).foregroundStyle(AppTheme.secondary)
             }.padding(17)
         }.background(AppTheme.canvas.ignoresSafeArea()).navigationTitle("今晚命定菜").navigationBarTitleDisplayMode(.inline)
     }
